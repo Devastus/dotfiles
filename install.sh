@@ -36,7 +36,4 @@ createLink ".ctags"
 createLink ".tmux.conf"
 createLink ".config/alacritty"
 
-# COPY FILES
-copy ".npmrc"
-
 echo "Installation complete."
