@@ -1,0 +1,23 @@
+# Node
+node_modules/
+npm-debug.log
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
+.vs/
+
+# IntelliJ IDEA
+.idea/
+
+# vi
+*~
+
+# Vimspector
+.vimspector.json
+
+# General
+log/
+*.log

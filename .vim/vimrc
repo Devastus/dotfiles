@@ -24,6 +24,8 @@ Plug 'rbgrouleff/bclose.vim'
 Plug 'mattn/webapi-vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'ericcurtin/CurtineIncSw.vim'
+Plug 'vimwiki/vimwiki'
+Plug 'puremourning/vimspector'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'neoclide/coc-yaml', {'do': 'yarn install --frozen-lockfile'}
@@ -51,6 +53,10 @@ let g:gitgutter_map_keys = 0
 
 " Ranger
 " let g:ranger_replace_netrw = 1
+"
+
+" Vimspector
+let g:vimspector_enable_mappings = 'HUMAN'
 
 let g:nnn#set_default_mappings = 0
 let g:nnn#command = 'nnn -d'

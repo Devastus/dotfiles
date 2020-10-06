@@ -2,10 +2,11 @@
 
 DIR=$(dirname "$(readlink -f "$0")")
 
-echo "Installing dotfiles..."
-
+##########################################################
 # FUNCTIONS
-function createLink() {
+##########################################################
+
+function link() {
     if [ -d "$DIR/$1" ]; then
         # Check whether directory exists
         if [ -d "$HOME/$1"  ]; then
@@ -27,13 +28,22 @@ function copy() {
     echo "$DIR/$1 copied to $HOME/$1"
 }
 
+##########################################################
+# PROCESS
+##########################################################
+
 # INITIALIZATION
+echo "Installing dotfiles..."
 sh "$DIR/.config/alacritty/generate_conf.sh"
 
 # SYMBOLIC LINKS
-createLink ".vim"
-createLink ".ctags"
-createLink ".tmux.conf"
-createLink ".config/alacritty"
+link ".vim"
+link ".ctags"
+link ".tmux.conf"
+link ".config/alacritty"
+link ".gitignore"
+
+# FINALIZATION
+git config --global core.excludesfile ~/.gitignore
 
 echo "Installation complete."
