@@ -1,0 +1,188 @@
+""""""""""""""""""""""""""""""""""""""""""""
+""" PLUGINS (vim-plug)
+""""""""""""""""""""""""""""""""""""""""""""
+
+if empty(glob('~/.vim/autoload/plug.vim'))
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall --sync | source $RC
+endif
+
+call plug#begin()
+
+Plug 'junegunn/vim-plug'
+Plug 'airblade/vim-gitgutter'
+Plug 'itchyny/lightline.vim'
+Plug 'kaicataldo/material.vim', { 'branch': 'main'  }
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'jiangmiao/auto-pairs'
+Plug 'pechorin/any-jump.vim'
+" Plug 'francoiscabrol/ranger.vim'
+Plug 'mcchrish/nnn.vim'
+Plug 'rbgrouleff/bclose.vim'
+Plug 'mattn/webapi-vim'
+Plug 'sheerun/vim-polyglot'
+Plug 'ericcurtin/CurtineIncSw.vim'
+
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc-yaml', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-html', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-css', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-python', {'do': 'yarn install --frozen-lockfile'}
+Plug 'clangd/coc-clangd', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-rls', {'do': 'yarn install --frozen-lockfile'}
+Plug 'josa42/coc-go', {'do': 'yarn install --frozen-lockfile'}
+Plug 'coc-extensions/coc-omnisharp', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-java', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-vetur', {'do': 'yarn install --frozen-lockfile'}
+Plug 'coc-extensions/coc-svelte', {'do': 'yarn install --frozen-lockfile'}
+
+call plug#end()
+
+" CtrlP
+let g:ctrlp_map = '<C-p>'
+let g:ctrlp_cmd = 'CtrlP !pwd'
+
+" Don't let Git Gutter map keys
+let g:gitgutter_map_keys = 0
+
+" Ranger
+" let g:ranger_replace_netrw = 1
+
+let g:nnn#set_default_mappings = 0
+let g:nnn#command = 'nnn -d'
+let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.9, 'highlight': 'Debug'  }  }
+let g:nnn#action = {
+      \ '<c-t>': 'tab split',
+      \ '<c-s>': 'split',
+      \ '<c-v>': 'vsplit' }
+
+" Tmux Navigator
+" let g:tmux_navigator_save_on_switch = 0
+" let g:tmux_navigator_disable_when_zoomed = 1
+
+" Rust
+" let g:rustfmt_autosave = 1
+au BufRead,BufNewFile *.rs set filetype=rust
+
+" CoC
+if exists('*complete_info')
+  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
+
+""""""""""""""""""""""""""""""""""""""""""""
+""" GENERAL
+""""""""""""""""""""""""""""""""""""""""""""
+
+set nocompatible
+set encoding=utf8
+syntax on
+filetype plugin indent on
+set backspace=indent,eol,start
+set hidden
+set noswapfile
+set nobackup
+set nowritebackup
+set clipboard+=unnamedplus
+
+let $RTP=split(&runtimepath, ',')[0]
+let $RC="$HOME/.vim/vimrc"
+set path=.,**
+
+set wildmenu
+set wildmode=longest:list,full
+set wildignore+=**/node_modules/**,**/dist/**,**_site/**,**/bin/**,**/target/**,**/.git/**,**/.vs/**,**/.vscode/**,**/.cargo/**
+set wildignore+=*.swp,*.png,*.jpg,*.gif,*.webp,*.jpeg,*.map,*.exe,*.so,*.dll,*.obj,*.o
+
+" Strip trailing whitespace from all the files
+autocmd BufWritePre * %s/\s\+$//e
+" Automatically remove preview window after auto-completion
+autocmd CompleteDone * pclose
+
+""""""""""""""""""""""""""""""""""""""""""""
+""" VISUALS
+""""""""""""""""""""""""""""""""""""""""""""
+
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
+
+set number
+set ruler
+set showcmd
+set splitright
+set splitbelow
+set tabstop=4 shiftwidth=4 softtabstop=4 expandtab smarttab autoindent smartindent
+set t_Co=256
+set background=dark
+set incsearch hlsearch
+set shortmess+=c
+set cmdheight=1
+set laststatus=2
+set updatetime=300
+autocmd InsertEnter * :setlocal nohlsearch
+autocmd InsertLeave * :setlocal hlsearch
+autocmd WinEnter * setlocal cursorline
+autocmd WinLeave * setlocal nocursorline
+
+" Theme
+let g:material_theme_style = 'palenight'
+let g:lightline = { 'colorscheme': 'material_vim' }
+colorscheme material
+
+""""""""""""""""""""""""""""""""""""""""""""
+""" KEYBINDS
+""""""""""""""""""""""""""""""""""""""""""""
+
+" Remap Leader to Space
+nnoremap <Space> <NOP>
+let mapleader="\<Space>"
+
+" " Leader mappings
+nnoremap <leader>f :NnnPicker '%:p:h'<CR>
+nnoremap <Leader>mb :silent make <bar> redraw!<CR>
+" map <Leader>h :wincmd h<CR>
+" map <Leader>j :wincmd j<CR>
+" map <Leader>k :wincmd k<CR>
+" map <Leader>l :wincmd l<CR>
+map <silent> <Leader>r+ :vertical resize +5<CR>
+map <silent> <Leader>r- :vertical resize -5<CR>
+
+" CurtineIncSw (switch between .c and .h files)
+nmap <Leader>th :call CurtineIncSw()<CR>
+
+" Use Ctrl + Space to trigger CoC completion
+inoremap <silent><expr> <c-@> coc#refresh()
+nmap <leader>rs <Plug>(coc-rename)
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Clear screen, including search highlights
+nnoremap <C-l> :nohlsearch<CR><C-l>
+
+" Start and end of line
+nnoremap H ^
+nnoremap L $
+
+" Close INSERT mode
+inoremap <C-j><C-k> <Esc>
+
+" Move and indent lines of text
+nnoremap <S-j> :m+<CR>==
+nnoremap <S-k> :m-2<CR>==
+nnoremap <Tab> >>
+nnoremap <S-Tab> <<
+vnoremap <S-j> :m'>+<CR>gv=gv
+vnoremap <S-k> :m-2<CR>gv=gv
+vnoremap <Tab> >gv
+vnoremap <S-Tab> <gv
