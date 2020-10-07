@@ -18,7 +18,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'pechorin/any-jump.vim'
-Plug 'mcchrish/nnn.vim'
+Plug 'francoiscabrol/ranger.vim'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'mattn/webapi-vim'
 Plug 'sheerun/vim-polyglot'
@@ -52,20 +52,10 @@ let g:ctrlp_cmd = 'CtrlP !pwd'
 let g:gitgutter_map_keys = 0
 
 " Ranger
-" let g:ranger_replace_netrw = 1
-"
+let g:ranger_replace_netrw = 1
 
 " Vimspector
 let g:vimspector_enable_mappings = 'HUMAN'
-
-" Nnn
-let g:nnn#set_default_mappings = 0
-let g:nnn#command = 'nnn -d'
-let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.9, 'highlight': 'Debug'  }  }
-let g:nnn#action = {
-      \ '<c-t>': 'tab split',
-      \ '<c-s>': 'split',
-      \ '<c-v>': 'vsplit' }
 
 " Rust
 " let g:rustfmt_autosave = 1
@@ -150,8 +140,10 @@ colorscheme material
 nnoremap <Space> <NOP>
 let mapleader="\<Space>"
 
-" " Leader mappings
-nnoremap <leader>f :NnnPicker '%:p:h'<CR>
+" Leader mappings
+nnoremap <leader>f :RangerCurrentFile<CR>
+nnoremap <leader>of :RangerCurrentFile<CR>
+nnoremap <leader>ow :RangerWorkingDirectory<CR>
 nnoremap <Leader>rb :silent make <bar> redraw!<CR>
 map <silent> <Leader>r+ :vertical resize +5<CR>
 map <silent> <Leader>r- :vertical resize -5<CR>
