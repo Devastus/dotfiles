@@ -41,6 +41,8 @@ link ".vim"
 link ".ctags"
 link ".tmux.conf"
 link ".config/alacritty"
+link ".config/ranger"
+link ".bashrc_common"
 link ".gitignore"
 
 # FINALIZATION

@@ -1,0 +1,6 @@
+[submodule ".config/ranger/plugins/ranger-gitplug"]
+	path = .config/ranger/plugins/ranger-gitplug
+	url = https://github.com/yonghie/ranger-gitplug
+[submodule ".config/ranger/plugins/ranger-devicons2"]
+	path = .config/ranger/plugins/ranger-devicons2
+	url = https://github.com/cdump/ranger-devicons2

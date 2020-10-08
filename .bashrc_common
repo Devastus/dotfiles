@@ -1,0 +1,2 @@
+. /usr/share/doc/ranger/examples/shell_automatic_cd.sh
+alias rcd='ranger_cd'
