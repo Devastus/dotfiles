@@ -1,9 +1,10 @@
+
 """"""""""""""""""""""""""""""""""""""""""""
 """ PLUGINS (vim-plug)
 """"""""""""""""""""""""""""""""""""""""""""
 
-if empty(glob('~/.vim/autoload/plug.vim'))
-    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+if empty(glob('~/.config/nvim/autoload/plug.vim'))
+    silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     autocmd VimEnter * PlugInstall --sync | source $RC
 endif
 
@@ -11,13 +12,11 @@ call plug#begin()
 
 Plug 'junegunn/vim-plug'
 Plug 'airblade/vim-gitgutter'
-Plug 'jreybert/vimagit'
+Plug 'kdheepak/lazygit.nvim', { 'branch': 'nvim-v0.4.3' }
 Plug 'itchyny/lightline.vim'
 Plug 'kaicataldo/material.vim', { 'branch': 'main'  }
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
-" Plug 'tpope/vim-fugitive'
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'pechorin/any-jump.vim'
 " Plug 'francoiscabrol/ranger.vim'
@@ -26,8 +25,7 @@ Plug 'rbgrouleff/bclose.vim'
 Plug 'mattn/webapi-vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'ericcurtin/CurtineIncSw.vim'
-Plug 'vimwiki/vimwiki'
-Plug 'puremourning/vimspector'
+" Plug 'puremourning/vimspector'
 Plug 'diepm/vim-rest-console'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -42,16 +40,12 @@ Plug 'clangd/coc-clangd', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-rls', {'do': 'yarn install --frozen-lockfile'}
 Plug 'josa42/coc-go', {'do': 'yarn install --frozen-lockfile'}
 Plug 'coc-extensions/coc-omnisharp', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-java', {'do': 'yarn install --frozen-lockfile'}
-Plug 'dansomething/coc-java-debug', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'neoclide/coc-java', {'do': 'yarn install --frozen-lockfile'}
+" Plug 'dansomething/coc-java-debug', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-vetur', {'do': 'yarn install --frozen-lockfile'}
 Plug 'coc-extensions/coc-svelte', {'do': 'yarn install --frozen-lockfile'}
 
 call plug#end()
-
-" CtrlP
-let g:ctrlp_map = '<C-p>'
-let g:ctrlp_cmd = 'CtrlP !pwd'
 
 " Don't let Git Gutter map keys
 let g:gitgutter_map_keys = 0
@@ -62,10 +56,6 @@ let g:lf_replace_netrw = 1
 
 " Vimspector
 let g:vimspector_enable_mappings = 'HUMAN'
-
-" VimWiki
-" let g:vimwiki_list = [{'path': '~/vimwiki/', 'syntax': 'markdown', 'ext': '.md'}]
-" let g:vimwiki_global_ext = 0
 
 " Rust
 " let g:rustfmt_autosave = 1
@@ -93,11 +83,10 @@ set bufhidden="delete"
 set nobackup
 set nowritebackup
 set clipboard=unnamedplus
-set ttymouse=sgr
 set mouse=a
 
 let $RTP=split(&runtimepath, ',')[0]
-let $RC="$HOME/.vim/vimrc"
+let $RC="$HOME/.config/nvim/init.vim"
 set path=.,**
 
 set wildmenu
@@ -116,7 +105,7 @@ au FocusGained,BufEnter * :checktime
 """ VISUALS
 """"""""""""""""""""""""""""""""""""""""""""
 
-if exists('+termguicolors')
+if has('termguicolors')
   let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
   let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
   set termguicolors
@@ -198,6 +187,8 @@ nmap <leader>ac  <Plug>(coc-codeaction)
 nmap <leader>qf  <Plug>(coc-fix-current)"
 " Use K to show documentation in preview window.
 nnoremap <silent> <leader>dd :call <SID>show_documentation()<CR>
+" Open LazyGit
+nnoremap <silent> <leader>lg :LazyGit<CR>
 
 " Clear screen, including search highlights
 nnoremap <C-l> :nohlsearch<CR><C-l>

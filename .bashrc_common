@@ -1,6 +1,11 @@
-export VISUAL=vim
+export VISUAL=nvim
 export JAVA_HOME=/usr/lib/jvm/default
 
 # Ranger
-. /usr/share/doc/ranger/examples/shell_automatic_cd.sh
-alias rcd='ranger_cd'
+# . /usr/share/doc/ranger/examples/shell_automatic_cd.sh
+# alias rcd='ranger_cd'
+
+LFCD="/usr/share/lf/lfcd.sh"
+if [ -f "$LFCD" ]; then
+    source "$LFCD"
+fi
