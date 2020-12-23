@@ -41,12 +41,13 @@ make install
 cd $DIR
 
 # SYMBOLIC LINKS
-link ".vim"
+# link ".vim"
 link ".ctags"
 link ".tmux.conf"
 link ".config/nvim"
 link ".config/alacritty"
 link ".config/ranger"
+link ".config/starship.toml"
 link ".bashrc_common"
 link ".gitignore"
 

@@ -1,4 +1,5 @@
 export VISUAL=nvim
+export EDITOR=nvim
 export JAVA_HOME=/usr/lib/jvm/default
 
 # Ranger
@@ -9,3 +10,5 @@ LFCD="/usr/share/lf/lfcd.sh"
 if [ -f "$LFCD" ]; then
     source "$LFCD"
 fi
+
+eval "$(starship init bash)"
