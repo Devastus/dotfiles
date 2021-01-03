@@ -19,7 +19,6 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'jiangmiao/auto-pairs'
 Plug 'pechorin/any-jump.vim'
-" Plug 'francoiscabrol/ranger.vim'
 Plug 'ptzz/lf.vim'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'mattn/webapi-vim'
@@ -27,25 +26,27 @@ Plug 'sheerun/vim-polyglot'
 Plug 'ericcurtin/CurtineIncSw.vim'
 " Plug 'puremourning/vimspector'
 Plug 'diepm/vim-rest-console'
-
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'neoclide/coc-yaml', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-html', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-css', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
-" Plug 'neoclide/coc-eslint', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-python', {'do': 'yarn install --frozen-lockfile'}
-Plug 'clangd/coc-clangd', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-rls', {'do': 'yarn install --frozen-lockfile'}
-Plug 'josa42/coc-go', {'do': 'yarn install --frozen-lockfile'}
-Plug 'coc-extensions/coc-omnisharp', {'do': 'yarn install --frozen-lockfile'}
-" Plug 'neoclide/coc-java', {'do': 'yarn install --frozen-lockfile'}
-" Plug 'dansomething/coc-java-debug', {'do': 'yarn install --frozen-lockfile'}
-Plug 'neoclide/coc-vetur', {'do': 'yarn install --frozen-lockfile'}
-Plug 'coc-extensions/coc-svelte', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/completion-nvim'
 
 call plug#end()
+
+" Neovim LSP configuration
+:lua require('lspconf')
+set completeopt-=preview
+autocmd Filetype python setlocal omnifunc=v:lua.vim.lsp.omnifunc
+autocmd BufEnter * lua require'completion'.on_attach()
+" Use <Tab> and <S-Tab> to navigate through popup menu
+inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" Set completeopt to have a better completion experience
+set completeopt=menuone,noinsert,noselect
+" Avoid showing message extra message when using completion
+set shortmess+=c
+let g:diagnostic_enable_virtual_text = 1
+let g:diagnostic_enable_underline = 0
+let g:diagnostic_auto_popup_while_jump = 1
+let g:diagnostic_insert_delay = 1
 
 " Don't let Git Gutter map keys
 let g:gitgutter_map_keys = 0
@@ -55,18 +56,11 @@ let g:gitgutter_map_keys = 0
 let g:lf_replace_netrw = 1
 
 " Vimspector
-let g:vimspector_enable_mappings = 'HUMAN'
+" let g:vimspector_enable_mappings = 'HUMAN'
 
 " Rust
 " let g:rustfmt_autosave = 1
 au BufRead,BufNewFile *.rs set filetype=rust
-
-" CoC
-if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
 
 """"""""""""""""""""""""""""""""""""""""""""
 """ GENERAL
@@ -173,22 +167,21 @@ map <silent> <Leader>r- :vertical resize -5<CR>
 " CurtineIncSw (switch between .c and .h files)
 nmap <Leader>th :call CurtineIncSw()<CR>
 
-" Use Ctrl + Space to trigger CoC completion
-inoremap <silent><expr> <c-@> coc#refresh()
-nmap <leader>rs <Plug>(coc-rename)
+" Nvim LSP keybinds
+" nnoremap <silent> gd        <cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> gd         <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> <leader>dd <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> gi        <cmd>lua vim.lsp.buf.implementation()<CR>
+" nnoremap <silent> <c-k>     <cmd>lua vim.lsp.buf.signature_help()<CR>
+nnoremap <silent> gy       <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <silent> gr        <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap <silent> g0        <cmd>lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <silent> gW        <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+nnoremap <silent> <leader>rn <cmd>lua vim.lsp.buf.rename()<CR>
+nnoremap <silent> <leader>qf <cmd>lua vim.lsp.buf.code_action()<CR>
 
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-" Remap keys for applying codeAction to the current buffer.
-nmap <leader>ac  <Plug>(coc-codeaction)
-" " Apply AutoFix to problem on the current line.
-nmap <leader>qf  <Plug>(coc-fix-current)"
-" Use K to show documentation in preview window.
-nnoremap <silent> <leader>dd :call <SID>show_documentation()<CR>
 " Open LazyGit
-nnoremap <silent> <leader>lg :LazyGit<CR>
+nnoremap <silent> <leader>gg :LazyGit<CR>
 
 " Clear screen, including search highlights
 nnoremap <C-l> :nohlsearch<CR><C-l>
