@@ -17,6 +17,7 @@ Plug 'itchyny/lightline.vim'
 Plug 'kaicataldo/material.vim', { 'branch': 'main'  }
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
+Plug 'godlygeek/tabular'
 Plug 'jiangmiao/auto-pairs'
 Plug 'pechorin/any-jump.vim'
 Plug 'ptzz/lf.vim'
@@ -28,6 +29,7 @@ Plug 'ericcurtin/CurtineIncSw.vim'
 Plug 'diepm/vim-rest-console'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
+Plug 'mfussenegger/nvim-dap'
 
 call plug#end()
 
@@ -105,13 +107,13 @@ if has('termguicolors')
   set termguicolors
 endif
 
+set t_Co=256
 set number
 set ruler
 set showcmd
 set splitright
 set splitbelow
 set tabstop=4 shiftwidth=4 softtabstop=4 expandtab smarttab autoindent smartindent
-set t_Co=256
 set background=dark
 set incsearch hlsearch
 set shortmess+=c
@@ -132,15 +134,7 @@ colorscheme material
 """ FUNCTIONS
 """"""""""""""""""""""""""""""""""""""""""""
 
-function! s:show_documentation()
-    if (index(['vim','help'], &filetype) >= 0)
-        execute 'h '.expand('<cword>')
-    elseif (coc#rpc#ready())
-        call CocActionAsync('doHover')
-    else
-        execute '!' . &keywordprg . " " . expand('<cword>')
-    endif
-endfunction
+
 
 """"""""""""""""""""""""""""""""""""""""""""
 """ KEYBINDS
@@ -154,9 +148,6 @@ let mapleader="\<Space>"
 noremap ^X@sq <NOP>
 
 " Leader mappings
-" nnoremap <leader>f :RangerCurrentFile<CR>
-" nnoremap <leader>of :RangerCurrentFile<CR>
-" nnoremap <leader>ow :RangerWorkingDirectory<CR>
 nnoremap <leader>f :LfCurrentFile<CR>
 nnoremap <leader>of :LfCurrentFile<CR>
 nnoremap <leader>ow :LfWorkingDirectory<CR>

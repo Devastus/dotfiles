@@ -11,14 +11,9 @@ My personal reusable configurations and dotfiles for Linux distributions.
 
 ## Software & Dependencies
 
-- **vim** - Text editor (install gvim for clipboard support)
-- **tmux** - Terminal multiplexer
 - **alacritty** - Fast terminal emulator
-- **w3m** - Terminal browser
-- **ranger** - Terminal file manager
+- **tmux** - Terminal multiplexer
+- **nvim** - Text editor
+- **lf** - Terminal file manager
+- **lazygit** - Terminal Git GUI
 - **NERDFont** - A patched font with devicons (I use Ubuntu Mono)
-
-For Arch Linux, you can simply run this command:
-```sh
-sudo pacman -S vim tmux alacritty w3m ranger
-```

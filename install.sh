@@ -34,19 +34,21 @@ function copy() {
 
 # INITIALIZATION
 echo "Installing dotfiles..."
-git submodule update --init --recursive
+# git submodule update --init --recursive
 sh "$DIR/.config/alacritty/generate_conf.sh"
-cd $DIR/.config/ranger/plugins/ranger-gitplug
-make install
-cd $DIR
+
+# INSTALLATION
 
 # SYMBOLIC LINKS
 # link ".vim"
 link ".ctags"
 link ".tmux.conf"
+link ".gdbinit"
 link ".config/nvim"
 link ".config/alacritty"
-link ".config/ranger"
+# link ".config/kak"
+# link ".config/kak-lsp"
+link "bin"
 link ".config/starship.toml"
 link ".bashrc_common"
 link ".gitignore"
