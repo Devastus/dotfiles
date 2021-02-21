@@ -15,6 +15,8 @@ Plug 'airblade/vim-gitgutter'
 Plug 'kdheepak/lazygit.nvim', { 'branch': 'nvim-v0.4.3' }
 Plug 'itchyny/lightline.vim'
 Plug 'kaicataldo/material.vim', { 'branch': 'main'  }
+Plug 'sonph/onehalf', {'rtp': 'vim/'}
+Plug 'sainnhe/edge'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'godlygeek/tabular'
@@ -53,8 +55,7 @@ let g:diagnostic_insert_delay = 1
 " Don't let Git Gutter map keys
 let g:gitgutter_map_keys = 0
 
-" ranger/lf
-" let g:ranger_replace_netrw = 1
+" lf filemanager
 let g:lf_replace_netrw = 1
 
 " Vimspector
@@ -107,6 +108,7 @@ if has('termguicolors')
   set termguicolors
 endif
 
+set background=dark
 set t_Co=256
 set number
 set ruler
@@ -126,9 +128,22 @@ autocmd WinEnter * setlocal cursorline
 autocmd WinLeave * setlocal nocursorline
 
 " Theme
-let g:material_theme_style = 'palenight'
-let g:lightline = { 'colorscheme': 'material_vim' }
-colorscheme material
+
+" let g:material_theme_style = 'palenight'
+" let g:lightline = { 'colorscheme': 'material_vim' }
+" colorscheme material
+
+" Make sure italics are supported
+let &t_ZH="\e[3m"
+let &t_ZR="\e[23m"
+let g:edge_style = 'aura'
+let g:edge_enable_italic = 0
+let g:disable_italic_comment = 1
+let g:lightline = { 'colorscheme': 'edge' }
+colorscheme edge
+
+" let g:lightline = { 'colorscheme': 'onehalfdark' }
+" colorscheme onehalfdark
 
 """"""""""""""""""""""""""""""""""""""""""""
 """ FUNCTIONS
