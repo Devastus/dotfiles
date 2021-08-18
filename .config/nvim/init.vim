@@ -15,19 +15,18 @@ Plug 'airblade/vim-gitgutter'
 Plug 'kdheepak/lazygit.nvim', { 'branch': 'nvim-v0.4.3' }
 Plug 'itchyny/lightline.vim'
 Plug 'kaicataldo/material.vim', { 'branch': 'main'  }
-Plug 'sonph/onehalf', {'rtp': 'vim/'}
 Plug 'sainnhe/edge'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'godlygeek/tabular'
 Plug 'jiangmiao/auto-pairs'
 Plug 'pechorin/any-jump.vim'
-Plug 'ptzz/lf.vim'
+Plug 'thezeroalpha/vim-lf'
 Plug 'rbgrouleff/bclose.vim'
 Plug 'mattn/webapi-vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'ericcurtin/CurtineIncSw.vim'
-" Plug 'puremourning/vimspector'
+Plug 'puremourning/vimspector'
 Plug 'diepm/vim-rest-console'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
@@ -59,7 +58,7 @@ let g:gitgutter_map_keys = 0
 let g:lf_replace_netrw = 1
 
 " Vimspector
-" let g:vimspector_enable_mappings = 'HUMAN'
+let g:vimspector_enable_mappings = 'HUMAN'
 
 " Rust
 " let g:rustfmt_autosave = 1
@@ -126,6 +125,9 @@ autocmd InsertEnter * :setlocal nohlsearch
 autocmd InsertLeave * :setlocal hlsearch
 autocmd WinEnter * setlocal cursorline
 autocmd WinLeave * setlocal nocursorline
+" Make sure italics are supported
+let &t_ZH="\e[3m"
+let &t_ZR="\e[23m"
 
 " Theme
 
@@ -133,17 +135,11 @@ autocmd WinLeave * setlocal nocursorline
 " let g:lightline = { 'colorscheme': 'material_vim' }
 " colorscheme material
 
-" Make sure italics are supported
-let &t_ZH="\e[3m"
-let &t_ZR="\e[23m"
 let g:edge_style = 'aura'
 let g:edge_enable_italic = 0
 let g:disable_italic_comment = 1
 let g:lightline = { 'colorscheme': 'edge' }
 colorscheme edge
-
-" let g:lightline = { 'colorscheme': 'onehalfdark' }
-" colorscheme onehalfdark
 
 """"""""""""""""""""""""""""""""""""""""""""
 """ FUNCTIONS
@@ -163,12 +159,12 @@ let mapleader="\<Space>"
 noremap ^X@sq <NOP>
 
 " Leader mappings
-nnoremap <leader>f :LfCurrentFile<CR>
-nnoremap <leader>of :LfCurrentFile<CR>
-nnoremap <leader>ow :LfWorkingDirectory<CR>
+nnoremap <leader>f :LF %:p edit<CR>
+nnoremap <leader>ow :LF :pwd edit<CR>
 nnoremap <Leader>rb :silent make <bar> redraw!<CR>
 map <silent> <Leader>r+ :vertical resize +5<CR>
 map <silent> <Leader>r- :vertical resize -5<CR>
+map <Leader>tb :Tabularize /
 
 " CurtineIncSw (switch between .c and .h files)
 nmap <Leader>th :call CurtineIncSw()<CR>

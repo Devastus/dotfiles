@@ -14,7 +14,7 @@ lspconfig.rls.setup{}
 
 -- C# (Omnisharp)
 local pid = vim.fn.getpid()
-local omnisharp_bin = "/opt/omnisharp-roslyn-http/OmniSharp"
+local omnisharp_bin = "/usr/bin/omnisharp"
 lspconfig.omnisharp.setup{
   cmd = { omnisharp_bin, "--languageserver" , "--hostPID", tostring(pid) },
 }
@@ -45,3 +45,10 @@ lspconfig.vuels.setup{
 
 -- YAML (npm i -g yaml-language-server)
 lspconfig.yamlls.setup{}
+
+-- ODIN (https://github.com/DanielGavin/ols)
+lspconfig.ols.setup{
+    root_dir = lspconfig.util.root_pattern("ols.json"),
+    cmd = { "ols" },
+    filetypes = { "odin" }
+}
