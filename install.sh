@@ -48,6 +48,8 @@ link ".config/kitty"
 link ".config/openbox"
 link ".config/rofi"
 link ".config/starship.toml"
+link ".config/lxqt/panel.conf"
+link ".config/lxqt/globalkeyshortcuts.conf"
 link ".local/bin"
 
 # FINALIZATION

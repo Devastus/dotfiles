@@ -7,7 +7,7 @@ xbps-install -Suy
 xbps-install -y void-repo-nonfree && xbps-install -Suy
 xbps-install -y xtools xorg xdg-utils lxqt sddm kitty neovim lf tmux git curl rofi \
     polkit elogind nerd-fonts alsa-utils pulseaudio unzip unrar picom htop \
-    firefox libreoffice papirus-icon-theme xclip \
+    firefox libreoffice papirus-icon-theme xclip kvantum arc-theme \
     nodejs python3 python3-pip go openjdk11 apache-maven ccls base-devel gdb
 
 echo "Linking services..."
