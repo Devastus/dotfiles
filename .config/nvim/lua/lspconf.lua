@@ -19,17 +19,24 @@ lspconfig.omnisharp.setup{
   cmd = { omnisharp_bin, "--languageserver" , "--hostPID", tostring(pid) },
 }
 
--- Java (Eclipse JDT)
---lspconfig.jdtls.setup{}
+-- Java (java-language-server)
+lspconfig.java_language_server.setup{
+    cmd = { "lang_server_linux.sh" }
+}
 
--- HTML (npm i -g vscode-html-languageserver-bin)
+lspconfig.kotlin_language_server.setup{}
+
+-- HTML (npm i -g vscode-langservers-extracted)
 lspconfig.html.setup{}
 
--- CSS (npm i -g vscode-css-languageserver-bin)
+-- CSS (npm i -g vscode-langservers-extracted)
 lspconfig.cssls.setup{}
 
--- JSON (npm i -g vscode-json-languageserver)
+-- JSON (npm i -g vscode-langservers-extracted)
 lspconfig.jsonls.setup{}
+
+-- ESLint (npm i -g vscode-langservers-extracted)
+lspconfig.eslint.setup{}
 
 -- Javascript & Typescript (npm i -g typescript-language-server)
 lspconfig.tsserver.setup{
@@ -47,8 +54,8 @@ lspconfig.vuels.setup{
 lspconfig.yamlls.setup{}
 
 -- ODIN (https://github.com/DanielGavin/ols)
-lspconfig.ols.setup{
-    root_dir = lspconfig.util.root_pattern("ols.json"),
-    cmd = { "ols" },
-    filetypes = { "odin" }
-}
+-- lspconfig.ols.setup{
+--     root_dir = lspconfig.util.root_pattern("ols.json"),
+--     cmd = { "ols" },
+--     filetypes = { "odin" }
+-- }

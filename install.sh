@@ -10,12 +10,14 @@ function link() {
     if [ -d "$DIR/$1" ]; then
         # Check whether directory exists
         if [ -d "$HOME/$1"  ]; then
+            echo "Removing existing directory $HOME/$1"
             rm -rf "$HOME/$1"
         fi
         ln -s "$DIR/$1" "$HOME/$1"
     else
         # Check whether file exists
         if [ -f "$HOME/$1"  ]; then
+            echo "Removing existing file $HOME/$1"
             rm -f "$HOME/$1"
         fi
         ln -s "$DIR/$1" "$HOME/$1"
@@ -34,24 +36,19 @@ function copy() {
 
 # INITIALIZATION
 echo "Installing dotfiles..."
-# git submodule update --init --recursive
-sh "$DIR/.config/alacritty/generate_conf.sh"
-
-# INSTALLATION
 
 # SYMBOLIC LINKS
-# link ".vim"
 link ".ctags"
 link ".tmux.conf"
-link ".gdbinit"
-link ".config/nvim"
-link ".config/alacritty"
-# link ".config/kak"
-# link ".config/kak-lsp"
-link "bin"
-link ".config/starship.toml"
+link ".xinitrc"
 link ".bashrc_common"
 link ".gitignore"
+link ".config/nvim"
+link ".config/kitty"
+link ".config/openbox"
+link ".config/rofi"
+link ".config/starship.toml"
+link ".local/bin"
 
 # FINALIZATION
 git config --global core.excludesfile ~/.gitignore

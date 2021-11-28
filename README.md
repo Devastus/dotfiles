@@ -11,7 +11,7 @@ My personal reusable configurations and dotfiles for Linux distributions.
 
 ## Software & Dependencies
 
-- **alacritty** - Fast terminal emulator
+- **kitty** - Fast terminal emulator
 - **tmux** - Terminal multiplexer
 - **nvim** - Text editor
 - **lf** - Terminal file manager

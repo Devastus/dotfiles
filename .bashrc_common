@@ -1,13 +1,24 @@
 export VISUAL=nvim
 export EDITOR=nvim
-export JAVA_HOME=/usr/lib/jvm/default
-
-export PATH=~/bin:$PATH
+export PATH=$PATH:$HOME/.local/bin
 
 # LF file manager
-LFCD="/usr/share/lf/lfcd.sh"
-if [ -f "$LFCD" ]; then
-    source "$LFCD"
-fi
+lfcd () {
+    tmp="$(mktemp)"
+    lf -last-dir-path="$tmp" "$@"
+    if [ -f "$tmp" ]; then
+        dir="$(cat "$tmp")"
+        rm -f "$tmp"
+        if [ -d "$dir" ]; then
+            if [ "$dir" != "$(pwd)" ]; then
+                cd "$dir"
+            fi
+        fi
+    fi
+}
 
 eval "$(starship init bash)"
+
+if [ -f "$HOME/.bashrc_custom" ]; then
+    source "$HOME/.bashrc_custom"
+fi
