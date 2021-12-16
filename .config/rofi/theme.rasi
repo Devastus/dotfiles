@@ -7,7 +7,6 @@ configuration {
     disable-history:                false;
 	sidebar-mode: 					false;
     hover-select:                   true;
-    theme: none;
 }
 
 * {
