@@ -8,7 +8,7 @@ local function get_vi_mode_color(mode)
         t = color.cyan,
     }
     local col = mode_colors[mode]
-    if col == nil then col = color.white end
+    if col == nil then col = color.fg end
     return col
 end
 
@@ -44,72 +44,48 @@ galaxyline.section.left = {
             provider = get_vi_mode,
             highlight = {color.purple,color.bg,'bold'},
             separator = '',
-            separator_highlight = {color.blue,color.bg},
+            separator_highlight = {color.cyan,color.bg},
         }
     },
     {
         Separator01 = {
-            provider = function() return '' end,
-            highlight = {color.blue,color.purple},
+            provider = function() return ' ' end,
+            highlight = {color.cyan,color.blue},
         }
     },
     {
         FileIcon = {
             provider = 'FileIcon',
             condition = condition.buffer_not_empty,
-            highlight = {color.bg,color.purple},
+            highlight = {color.fg,color.blue},
         }
     },
     {
         FileName = {
             provider = 'FileName',
-            highlight = {color.bg,color.purple},
+            highlight = {color.fg,color.blue},
             separator = '',
-            separator_highlight = {color.blue,color.purple},
+            separator_highlight = {color.cyan,color.blue},
         }
     },
     {
         GitIcon = {
             provider = function() return '  ' end,
             condition = condition.check_git_workspace,
-            highlight = {color.bg,color.blue,'bold'},
+            highlight = {color.bg,color.cyan,'bold'},
         }
     },
     {
         GitBranch = {
             provider = 'GitBranch',
             condition = condition.check_git_workspace,
-            highlight = {color.bg,color.blue,'bold'},
-        }
-    },
-    {
-        DiffAdd = {
-            provider = 'DiffAdd',
-            condition = condition.check_git_workspace,
-            icon = '  ',
-            highlight = {color.bg,color.blue,'bold'},
-        }
-    },
-    {
-        DiffModified = {
-            provider = 'DiffModified',
-            condition = condition.check_git_workspace,
-            icon = ' ',
-            highlight = {color.bg,color.blue,'bold'},
-        }
-    },
-    {
-        DiffRemove = {
-            provider = 'DiffRemove',
-            condition = condition.check_git_workspace,
-            icon = ' ',
-            highlight = {color.bg,color.blue,'bold'},
+            highlight = {color.bg,color.cyan,'bold'},
         }
     },
     {
         LeftEnd = {
-            provider = function() return '' end,
-            highlight = {color.blue,color.bg},
+            provider = function() return '█' end,
+            highlight = {color.cyan,color.bg},
         }
     }
 }
@@ -118,23 +94,23 @@ galaxyline.section.right = {
     {
         RightEnd = {
             provider = function() return '' end,
-            highlight = {color.blue,color.bg},
+            highlight = {color.black,color.bg},
         }
     },
     {
         LineColumn = {
             provider = 'LineColumn',
-            highlight = {color.bg,color.purple,'bold'},
+            highlight = {color.bg,color.black,'bold'},
             separator = '',
-            separator_highlight = {color.blue,color.purple},
+            separator_highlight = {color.black,color.black},
         }
     },
     {
         LinePercent = {
             provider = 'LinePercent',
-            highlight = {color.bg,color.cyan,'bold'},
+            highlight = {color.bg,color.light_black,'bold'},
             separator = '',
-            separator_highlight = {color.cyan,color.purple},
+            separator_highlight = {color.light_black,color.black},
         }
     }
 }
