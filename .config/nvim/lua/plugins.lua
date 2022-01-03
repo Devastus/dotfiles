@@ -13,6 +13,7 @@ require "paq" {
 
     "neovim/nvim-lspconfig";
     "mfussenegger/nvim-dap";
+    "rcarriga/nvim-dap-ui";
 
     "nvim-telescope/telescope.nvim";
     "nvim-telescope/telescope-dap.nvim";
@@ -25,6 +26,7 @@ require "paq" {
 }
 
 require("plugins/lsp")
+require("plugins/dap")
 require("plugins/telescope")
 require("plugins/treesitter")
 require("plugins/mini")
