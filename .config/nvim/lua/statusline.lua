@@ -99,7 +99,7 @@ local color_map = {
     ["v"] = { color.light_white, color.purple },
     ["V"] = { color.light_white, color.purple },
     [""] = { color.light_white, color.purple },
-    ["i"] = { color.light_white, color.light_cyan },
+    ["i"] = { color.light_white, color.red },
     ["c"] = { color.light_white, color.light_purple },
 }
 

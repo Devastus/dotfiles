@@ -22,3 +22,5 @@ eval "$(starship init bash)"
 if [ -f "$HOME/.bashrc_custom" ]; then
     source "$HOME/.bashrc_custom"
 fi
+
+xset r rate 300 50

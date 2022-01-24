@@ -89,7 +89,12 @@ local global = {
 
 local servers = {
     ccls = {
-        root_dir = lspconfig.util.root_pattern("compile_commands.json", ".ccls-root", ".ccls", "compile_flags.txt", ".git")
+        root_dir = lspconfig.util.root_pattern("compile_commands.json", ".ccls-root", ".ccls", "compile_flags.txt", ".git"),
+        init_options = {
+            clang = {
+                resourceDir = "/usr/lib/clang/12.0.1",
+            },
+        }
     },
     gopls = {
         cmd = {'gopls', '--remote=auto'},
