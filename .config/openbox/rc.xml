@@ -428,6 +428,11 @@
       <mousebind button="W-Right" action="Drag">
         <action name="Resize"/>
       </mousebind>
+      <mousebind button="W-S-Right" action="Click">
+        <action name="ShowMenu">
+          <menu>client-menu</menu>
+        </action>
+      </mousebind>
       <mousebind button="W-Middle" action="Press">
         <action name="Lower"/>
         <action name="FocusToBottom"/>
