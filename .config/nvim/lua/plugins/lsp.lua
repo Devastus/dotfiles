@@ -63,9 +63,9 @@ local on_attach = function(client, bufnr)
     buf_set_keymap('n', '<space>rf', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 
     -- Format on save
-    if client.resolved_capabilities.document_formatting then
-        vim.cmd [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()]]
-    end
+    -- if client.resolved_capabilities.document_formatting then
+    --     vim.cmd [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()]]
+    -- end
 
     -- Diagnostics
     vim.diagnostic.config({
@@ -93,6 +93,9 @@ local servers = {
         init_options = {
             clang = {
                 resourceDir = "/usr/lib/clang/12.0.1",
+            },
+            index = {
+                threads = 2,
             },
         }
     },

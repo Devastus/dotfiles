@@ -25,4 +25,16 @@ vmap("<S-k>", ":m-2<CR>gv=gv")
 vmap("<Tab>", ">gv")
 vmap("<S-Tab>", "<gv")
 
-nmap("<leader>f", ":Explore<CR>")
+-- Remap Vim default "delete" ie. cut to 'x' and actually delete with 'd'
+-- also paste by default now always pastes from yank register instead of delete register
+nmap("x", "\"0d")
+nmap("xx", "\"0dd")
+vmap("x", "\"0d")
+nmap("d", "\"_d")
+vmap("d", "\"_d")
+nmap("c", "\"_c")
+vmap("c", "\"_c")
+nmap("p", "\"0p")
+vmap("p", "\"0p")
+nmap("P", "\"0P")
+vmap("P", "\"0P")

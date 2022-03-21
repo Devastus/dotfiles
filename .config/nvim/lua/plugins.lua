@@ -8,8 +8,10 @@ require "paq" {
     "lewis6991/gitsigns.nvim";
 
     "kdheepak/lazygit.nvim";
-    "thezeroalpha/vim-lf";
-    "rbgrouleff/bclose.vim";
+    "kyazdani42/nvim-tree.lua";
+    "akinsho/toggleterm.nvim";
+    -- "thezeroalpha/vim-lf";
+    -- "rbgrouleff/bclose.vim";
 
     "neovim/nvim-lspconfig";
     "mfussenegger/nvim-dap";
@@ -30,7 +32,9 @@ require("plugins/dap")
 require("plugins/telescope")
 require("plugins/treesitter")
 require("plugins/mini")
-require("plugins/lf")
+require("plugins/toggleterm")
+-- require("plugins/lf")
+require("plugins/nvim-tree")
 require("plugins/git")
 require("plugins/lazygit")
 require("plugins/tabular")
