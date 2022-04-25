@@ -1,4 +1,9 @@
-local color = require("xresources")
+local palette = require("palette")
+local theme = require("onedark")
+theme.setup {
+    style = palette.style
+}
+theme.load()
 
 opt.background = "dark"
 opt.number = true
@@ -14,7 +19,3 @@ cmd [[autocmd InsertEnter * :setlocal nohlsearch]]
 cmd [[autocmd InsertLeave * :setlocal hlsearch]]
 cmd [[autocmd WinEnter * setlocal cursorline]]
 cmd [[autocmd WinLeave * setlocal nocursorline]]
-
-cmd [[colorscheme xresources]]
-
-highlight("netrwDir", "none", color.white, "none")

@@ -1,35 +1,31 @@
-require "paq" {
-    "savq/paq-nvim";
+vim.cmd [[packadd packer.nvim]]
 
-    "godlygeek/tabular";
-    "echasnovski/mini.nvim";
-    "sheerun/vim-polyglot"; -- Hopefully treesitter will deprecate this
-    "nvim-lua/plenary.nvim";
-    "lewis6991/gitsigns.nvim";
+require('packer').startup(function(use)
+    use "wbthomason/packer.nvim"
+    use "neovim/nvim-lspconfig"
+    use "mfussenegger/nvim-dap"
+    use "rcarriga/nvim-dap-ui"
 
-    "kdheepak/lazygit.nvim";
-    "kyazdani42/nvim-tree.lua";
-    "akinsho/toggleterm.nvim";
-    -- "thezeroalpha/vim-lf";
-    -- "rbgrouleff/bclose.vim";
+    use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }
 
-    "neovim/nvim-lspconfig";
-    "mfussenegger/nvim-dap";
-    "rcarriga/nvim-dap-ui";
+    use "godlygeek/tabular"
+    use "echasnovski/mini.nvim"
+    use "nvim-lua/plenary.nvim"
+    use "lewis6991/gitsigns.nvim"
+    use "kdheepak/lazygit.nvim"
+    use "kyazdani42/nvim-tree.lua"
+    use "akinsho/toggleterm.nvim"
+    use "navarasu/onedark.nvim"
+    use "kyazdani42/nvim-web-devicons"
 
-    "nvim-telescope/telescope.nvim";
-    "nvim-telescope/telescope-dap.nvim";
-    "gbrlsnchs/telescope-lsp-handlers.nvim";
-
-    { "nvim-treesitter/nvim-treesitter", run = fn ["TSUpdate"] };
-
-    "nekonako/xresources-nvim";
-    "kyazdani42/nvim-web-devicons";
-}
+    -- use "nvim-telescope/telescope.nvim"
+    --use "nvim-telescope/telescope-dap.nvim"
+    --use "gbrlsnchs/telescope-lsp-handlers.nvim"
+end)
 
 require("plugins/lsp")
 require("plugins/dap")
-require("plugins/telescope")
+--require("plugins/telescope")
 require("plugins/treesitter")
 require("plugins/mini")
 require("plugins/toggleterm")

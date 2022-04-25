@@ -13,6 +13,11 @@ dap.adapters = {
         command = "node",
         args = {os.getenv("HOME") .. "/.local/dev/vscode-chrome-debug/out/src/chromeDebug.js"}
     },
+    lldb = {
+      type = 'executable',
+      command = '/usr/bin/lldb-vscode', -- adjust as needed
+      name = "lldb"
+    }
 }
 dap.configurations = {
     javascript = {

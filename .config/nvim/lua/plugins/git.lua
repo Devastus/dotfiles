@@ -1,4 +1,4 @@
-local color = require("xresources")
+local color = require("palette").color
 
 require("gitsigns").setup({
     signs = {

@@ -7,21 +7,12 @@ DIR=$(dirname "$(readlink -f "$0")")
 ##########################################################
 
 function link() {
-    if [ -d "$DIR/$1" ]; then
-        # Check whether directory exists
-        if [ -d "$HOME/$1"  ]; then
-            echo "Removing existing directory $HOME/$1"
-            rm -rf "$HOME/$1"
-        fi
-        ln -s "$DIR/$1" "$HOME/$1"
-    else
-        # Check whether file exists
-        if [ -f "$HOME/$1"  ]; then
-            echo "Removing existing file $HOME/$1"
-            rm -f "$HOME/$1"
-        fi
-        ln -s "$DIR/$1" "$HOME/$1"
+    if [ -d "$HOME/$1" ] || [ -f "$HOME/$1" ] || [ -h "$HOME/$1" ]; then
+    	echo "Removing existing $HOME/$1"
+    	rm -rf "$HOME/$1"
     fi
+
+    ln -s "$DIR/$1" "$HOME/$1"
     echo "$DIR/$1 linked to $HOME/$1"
 }
 
@@ -41,17 +32,17 @@ echo "Installing dotfiles..."
 link ".ctags"
 link ".tmux.conf"
 link ".xinitrc"
-link ".Xresources"
+#link ".Xresources"
 link ".bashrc_common"
 link ".gitignore"
 link ".config/nvim"
 link ".config/kitty"
-link ".config/openbox"
-link ".config/rofi"
+#link ".config/openbox"
+#link ".config/rofi"
 link ".config/starship.toml"
-link ".config/lxqt/panel.conf"
-link ".config/lxqt/globalkeyshortcuts.conf"
-link ".local/bin"
+#link ".config/lxqt/panel.conf"
+#link ".config/lxqt/globalkeyshortcuts.conf"
+#link ".local/bin"
 
 # FINALIZATION
 git config --global core.excludesfile ~/.gitignore

@@ -91,24 +91,25 @@ local sections = {
 -- Assign colors & highlights
 -------------------------------------------------------------------------------
 
-local color = require("xresources")
+--local color = require("xresources")
+local color = require("palette").color
 
 local c_none = "none"
 local color_map = {
     ["n"] = { color.black, color.blue },
-    ["v"] = { color.light_white, color.purple },
-    ["V"] = { color.light_white, color.purple },
-    [""] = { color.light_white, color.purple },
-    ["i"] = { color.light_white, color.red },
-    ["c"] = { color.light_white, color.light_purple },
+    ["v"] = { color.white, color.purple },
+    ["V"] = { color.white, color.purple },
+    [""] = { color.white, color.purple },
+    ["i"] = { color.white, color.red },
+    ["c"] = { color.white, color.dark_red },
 }
 
-highlight("StatuslineFile", "none", color.white, color.black)
-highlight("StatuslineFiletype", "bold", color.blue, color.black)
-highlight("StatuslineGit", "bold", color.blue, color.black)
-highlight("StatuslineLocation", "none", color.white, color.black)
-highlight("StatuslineSeparator", "none", c_none, color.black)
-highlight("StatuslineBlank", "none", c_none, c_none)
+highlight("StatuslineFile", "none", color.fg, color.bg_d)
+highlight("StatuslineFiletype", "bold", color.blue, color.bg_d)
+highlight("StatuslineGit", "bold", color.blue, color.bg_d)
+highlight("StatuslineLocation", "none", color.fg, color.bg_d)
+highlight("StatuslineSeparator", "none", c_none, color.bg_d)
+highlight("StatuslineBlank", "none", c_none, color.bg_d)
 
 -------------------------------------------------------------------------------
 -- Draw statusline
