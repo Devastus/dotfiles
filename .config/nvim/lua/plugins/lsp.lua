@@ -88,21 +88,21 @@ local global = {
 }
 
 local servers = {
-    -- ccls = {
-    --     root_dir = lspconfig.util.root_pattern("compile_commands.json", ".ccls-root", ".ccls", "compile_flags.txt", ".git"),
-    --     init_options = {
-    --         clang = {
-    --             resourceDir = "/usr/lib/clang/12.0.1",
-    --         },
-    --         index = {
-    --             threads = 2,
-    --         },
-    --     }
-    -- },
-    clangd = {
-        root_dir = lspconfig.util.root_pattern(".clangd", ".clang-tidy", ".clang-format", "compile_commands.json", "compile_flags.txt", "configure.ac", ".git"),
-        single_file_support = true,
+    ccls = {
+        root_dir = lspconfig.util.root_pattern("compile_commands.json", ".ccls-root", ".ccls", "compile_flags.txt", ".git"),
+        init_options = {
+            clang = {
+                resourceDir = "/usr/lib/clang/12.0.1",
+            },
+            index = {
+                threads = 2,
+            },
+        }
     },
+    -- clangd = {
+    --     root_dir = lspconfig.util.root_pattern(".clangd", ".clang-tidy", ".clang-format", "compile_commands.json", "compile_flags.txt", "configure.ac", ".git"),
+    --     single_file_support = true,
+    -- },
     gopls = {
         cmd = {'gopls', '--remote=auto'},
     },

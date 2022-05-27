@@ -13,24 +13,25 @@ require('packer').startup(function(use)
     use "nvim-lua/plenary.nvim"
     use "lewis6991/gitsigns.nvim"
     use "kdheepak/lazygit.nvim"
-    use "kyazdani42/nvim-tree.lua"
     use "akinsho/toggleterm.nvim"
     use "navarasu/onedark.nvim"
     use "kyazdani42/nvim-web-devicons"
 
-    -- use "nvim-telescope/telescope.nvim"
-    --use "nvim-telescope/telescope-dap.nvim"
-    --use "gbrlsnchs/telescope-lsp-handlers.nvim"
+    use "lmburns/lf.nvim"
+
+    use "nvim-telescope/telescope.nvim"
+    use "nvim-telescope/telescope-dap.nvim"
+    use "gbrlsnchs/telescope-lsp-handlers.nvim"
+    use "tknightz/telescope-termfinder.nvim"
 end)
 
 require("plugins/lsp")
 require("plugins/dap")
---require("plugins/telescope")
+require("plugins/telescope")
 require("plugins/treesitter")
 require("plugins/mini")
 require("plugins/toggleterm")
--- require("plugins/lf")
-require("plugins/nvim-tree")
+require("plugins/lf")
 require("plugins/git")
 require("plugins/lazygit")
 require("plugins/tabular")
