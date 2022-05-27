@@ -18,6 +18,8 @@ require('packer').startup(function(use)
     use "kyazdani42/nvim-web-devicons"
 
     use "lmburns/lf.nvim"
+    use "editorconfig/editorconfig-vim"
+    use "mhartington/formatter.nvim"
 
     use "nvim-telescope/telescope.nvim"
     use "nvim-telescope/telescope-dap.nvim"
@@ -35,3 +37,5 @@ require("plugins/lf")
 require("plugins/git")
 require("plugins/lazygit")
 require("plugins/tabular")
+require("plugins/editorconfig")
+require("plugins/formatter")

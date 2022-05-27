@@ -109,7 +109,7 @@ local servers = {
     rls = {},
     nimls = {},
     omnisharp = {
-        cmd = { "/usr/bin/omnisharp", "--languageserver" , "--hostPID", tostring(vim.fn.getpid()) },
+        cmd = { "/usr/local/bin/omnisharp", "--languageserver" , "--hostPID", tostring(vim.fn.getpid()) },
     },
     java_language_server = {
         cmd = { "lang_server_linux.sh" }
