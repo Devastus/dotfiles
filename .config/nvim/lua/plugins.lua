@@ -6,7 +6,8 @@ require('packer').startup(function(use)
     use "mfussenegger/nvim-dap"
     use "rcarriga/nvim-dap-ui"
 
-    use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }
+    -- use { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }
+    use "sheerun/vim-polyglot"
 
     use "godlygeek/tabular"
     use "echasnovski/mini.nvim"
@@ -30,7 +31,7 @@ end)
 require("plugins/lsp")
 require("plugins/dap")
 require("plugins/telescope")
-require("plugins/treesitter")
+-- require("plugins/treesitter")
 require("plugins/mini")
 require("plugins/toggleterm")
 require("plugins/lf")
