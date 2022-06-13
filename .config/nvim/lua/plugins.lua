@@ -18,7 +18,9 @@ require('packer').startup(function(use)
     use "navarasu/onedark.nvim"
     use "kyazdani42/nvim-web-devicons"
 
-    use "lmburns/lf.nvim"
+    -- use "lmburns/lf.nvim"
+    use "tamago324/lir.nvim"
+    use "tamago324/lir-git-status.nvim"
     use "editorconfig/editorconfig-vim"
     use "mhartington/formatter.nvim"
 
@@ -34,7 +36,8 @@ require("plugins/telescope")
 -- require("plugins/treesitter")
 require("plugins/mini")
 require("plugins/toggleterm")
-require("plugins/lf")
+-- require("plugins/lf")
+require("plugins/lir")
 require("plugins/git")
 require("plugins/lazygit")
 require("plugins/tabular")

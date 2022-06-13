@@ -67,7 +67,7 @@ local sections = {
 
     filename = function(hl, filetype)
         return filetype ~= ""
-            and H.get_highlighted(hl, "%<%f ")
+            and H.get_highlighted(hl, " %<%f ")
             or ""
     end,
 
@@ -121,9 +121,9 @@ function statusline_draw()
 
     return table.concat({
         sections.mode(m, mode_map, color_map),
-        sections.filetype("StatuslineFiletype", ft),
         sections.filename("StatuslineFile", ft),
         sections.separator("StatuslineSeparator"),
+        sections.filetype("StatuslineFiletype", ft),
         sections.git("StatuslineGit"),
         sections.location("StatuslineLocation"),
     })
