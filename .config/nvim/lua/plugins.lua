@@ -18,6 +18,7 @@ vim.cmd [[packadd packer.nvim]]
 local packer = require("packer")
 packer.startup(function(use)
   use "wbthomason/packer.nvim"
+  use { "williamboman/mason.nvim", commit = "a1f1fb070fb5acb9c535f0300b77d22561201e1b" }
   use { "neovim/nvim-lspconfig", commit = "5f4b1fa83c80f43e434c1fb227967dac9ad8f44c" }
   use { "nvim-lua/plenary.nvim", commit = "4b7e52044bbb84242158d977a50c4cbcd85070c7" }
   use { "nvim-telescope/telescope.nvim", tag = "0.1.0" }
@@ -176,10 +177,11 @@ lspconfig.nimls.setup({
   single_file_support = true,
 })
 
-
 require("mini.comment").setup({})
 require("mini.cursorword").setup({ delay = 300 })
 require("mini.pairs").setup({})
 require("mini.surround").setup({})
 require("mini.tabline").setup({})
 require("mini.statusline").setup({})
+
+require("mason").setup()
