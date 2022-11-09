@@ -1,21 +1,12 @@
-local palette = require("palette")
-local theme = require("onedark")
-theme.setup {
-    style = palette.style
-}
+vim.opt.number = true
+vim.opt.ruler = true
+vim.opt.showcmd = true
+vim.opt.showmatch = true
+vim.opt.termguicolors = true
+vim.opt.incsearch = true
+vim.opt.cmdheight = 1
+vim.opt.laststatus = 3
+
+local theme = require("tokyonight")
+theme.setup({style = "moon"})
 theme.load()
-
-opt.background = "dark"
-opt.number = true
-opt.ruler = true
-opt.showcmd = true
-opt.showmatch = true
-opt.termguicolors = true
-opt.incsearch = true
-opt.cmdheight = 1
-opt.laststatus = 2
-
-cmd [[autocmd InsertEnter * :setlocal nohlsearch]]
-cmd [[autocmd InsertLeave * :setlocal hlsearch]]
-cmd [[autocmd WinEnter * setlocal cursorline]]
-cmd [[autocmd WinLeave * setlocal nocursorline]]

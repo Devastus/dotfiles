@@ -1,46 +1,29 @@
--------------------------------------------------------------
--- GENERAL
--------------------------------------------------------------
+local vim = vim
 
-opt.encoding = "utf-8"
-opt.backspace = "indent,eol,start"
-opt.swapfile = false
-opt.bufhidden = "delete"
-opt.backup = false
-opt.writebackup = false
-opt.clipboard = "unnamedplus"
-opt.mouse = "a"
-opt.path = { ".", "**" }
-opt.wildmenu = true
-opt.wildmode = "longest:list,full"
-opt.updatetime = 300
-opt.splitright = true
-opt.splitbelow = true
+vim.opt.guicursor = ""
+vim.opt.wrap = false
+vim.opt.swapfile = false
+vim.opt.bufhidden = "delete"
+vim.opt.backup = false
+vim.opt.writebackup = false
+vim.opt.clipboard = "unnamedplus"
+vim.opt.mouse = "a"
+vim.opt.updatetime = 300
+vim.opt.splitright = true
+vim.opt.splitbelow = true
+vim.opt.completeopt = {'menu', 'menuone', 'noselect'}
 
--------------------------------------------------------------
--- TABS & INDENT
--------------------------------------------------------------
+-- Tabs
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+vim.opt.smarttab = true
+vim.opt.autoindent = true
+vim.opt.smartindent = true
 
-opt.tabstop = 4
-opt.softtabstop = 4
-opt.shiftwidth = 4
-opt.expandtab = true
-opt.smarttab = true
-opt.autoindent = true
-opt.smartindent = true
-
--------------------------------------------------------------
--- PERFORMANCE
--------------------------------------------------------------
-
-opt.hidden = true
-opt.history = 100
-opt.lazyredraw = true
-opt.synmaxcol = 240
-
--------------------------------------------------------------
--- AUTO-COMMANDS
--------------------------------------------------------------
-
-cmd [[au BufWritePre * :%s/\s\+$//e]] -- Remove trailing whitespace upon saving
-cmd [[au BufEnter * set fo-=c fo-=r fo-=o]] -- Do not autocomment new lines
+-- Performance
+vim.opt.hidden = true
+vim.opt.history = 100
+vim.opt.lazyredraw = true
+vim.opt.synmaxcol = 240

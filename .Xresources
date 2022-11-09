@@ -1,49 +1,67 @@
-! special
-*.foreground:   #968c83
-*.background:   #1e121a
-*.cursorColor:  #968c83
+#define _color0 #1a1b26
+#define _color1 #F7768E
+
+! Sensible defaults
+xterm*termName: xterm-256color
+xterm*font: monospace
+xterm*faceName: Hack Nerd Font Mono:size=11
+xterm*boldMode: false
+xterm*loginShell: true
+xterm*vt100*geometry: 90x34
+xterm*saveLines: 2000
+xterm*charClass: 33:48,35:48,37:48,43:48,45-47:48,64:48,95:48,126:48
+xterm*locale: false
+xterm*utf8: true
+xterm*scrollTtyOutput: false
+xterm*scrollKey: true
+xterm*scrollBar: false
+xterm*rightScrollBar: false
+xterm*bellIsUrgent: true
+xterm*metaSendsEscape: true
+
+! Keybinds
+xterm*translations: #override \n\
+    Ctrl Shift <Key>N: scroll-back(1, halfpage) \n\
+    Ctrl Shift <Key>T: scroll-forw(1, halfpage) \n\
+    Ctrl Shift <Key>C: copy-selection(CLIPBOARD) \n\
+    Ctrl Shift <Key>V: insert-selection(CLIPBOARD)
+
+!Theme Tokyo night
+*foreground: #a9b1d6
+*background: #1a1b26
+*cursorColor: #a9b1d6
+*borderColor: #1a1b26
+xterm*background: #1a1b26
+xterm*foreground: #a9b1d6
 
 ! black
-*.color0:       #160c13
-*.color8:       #5e5252
+xterm*color0:     #1a1b26
+xterm*color8:     #4e5173
 
 ! red
-*.color1:       #9e3231
-*.color9:       #b7211f
+xterm*color1:     #F7768E
+xterm*color9:     #F7768E
 
 ! green
-*.color2:       #858162
-*.color10:      #858162
+xterm*color2:     #9ECE6A
+xterm*color10:    #9ECE6A
 
 ! yellow
-*.color3:       #bf8841
-*.color11:      #eaa549
+xterm*color3:     #E0AF68
+xterm*color11:    #E0AF68
 
 ! blue
-*.color4:       #426a79
-*.color12:      #3e8099
+xterm*color4:     #7AA2F7
+xterm*color12:    #7AA2F7
 
 ! magenta
-*.color5:       #9b4b34
-*.color13:      #b25b47
+xterm*color5:     #9a7ecc
+xterm*color13:    #9a7ecc
 
 ! cyan
-*.color6:       #989a9c
-*.color14:      #989a9c
+xterm*color6:     #4abaaf
+xterm*color14:    #4abaaf
 
 ! white
-*.color7:       #968c83
-*.color15:      #d5ccba
-
-URxvt*depth: 32
-
-! transparency in i3
-!URxvt.transparent: true
-!URxvt.shading:20
-
-Xft.dpi: 96
-Xft.Hinting: 1
-Xft.RGBA: rgba
-Xft.HintStyle: hintslight
-Xft.Antialias: 1
-
+xterm*color7:     #acb0d0
+xterm*color15:    #acb0d0
