@@ -38,3 +38,9 @@ vim.keymap.set('x', '<leader>aa', function() require'align'.align_to_char(1, tru
 vim.keymap.set('x', '<leader>as', function() require'align'.align_to_char(2, true, true)       end, {noremap = true, silent = true})
 vim.keymap.set('x', '<leader>aw', function() require'align'.align_to_string(false, true, true) end, {noremap = true, silent = true})
 vim.keymap.set('x', '<leader>ar', function() require'align'.align_to_string(true, true, true)  end, {noremap = true, silent = true})
+
+local telescope_builtin = require('telescope.builtin')
+vim.keymap.set('n', '<leader>tf', telescope_builtin.find_files, {})
+vim.keymap.set('n', '<leader>tg', telescope_builtin.live_grep, {})
+vim.keymap.set('n', '<leader>tb', telescope_builtin.buffers, {})
+vim.keymap.set('n', '<leader>th', telescope_builtin.help_tags, {})

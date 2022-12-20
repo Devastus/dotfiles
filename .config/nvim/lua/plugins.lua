@@ -161,7 +161,7 @@ lspconfig.tsserver.setup({
   init_options = { hostInfo = "neovim" },
   root_dir = lspconfig.util.root_pattern("package.json", "tsconfig.json", "jsconfig.json", ".git"),
 })
-lspconfig.ccls.setup({})
+lspconfig.clangd.setup({})
 lspconfig.gopls.setup({})
 lspconfig.rust_analyzer.setup({
   cmd = {"rustup", "run", "stable", "rust-analyzer"}
