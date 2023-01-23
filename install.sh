@@ -46,6 +46,7 @@ link ".gitignore"
 link ".config/nvim"
 link ".config/openbox"
 link ".config/rofi"
+link ".config/xcolors"
 
 # FINALIZATION
 git config --global core.excludesfile ~/.gitignore

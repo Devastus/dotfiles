@@ -1,0 +1,947 @@
+local M = {}
+M.util = {}
+
+M.util.highlight = function(hlgroup, args)
+  if (type(args) == "string") then
+    vim.cmd(('hi! link %s %s'):format(hlgroup, args))
+  else
+    local cmd = { "hi", hlgroup }
+    for k,v in pairs(args) do
+      table.insert(cmd, k .. "=" .. v)
+    end
+    vim.cmd(table.concat(cmd, " "))
+  end
+end
+
+local function default_parse()
+  local command = io.popen("xrdb -query | sed -nre 's/^.*[*.](\\w+):.*#(\\w+)$/  \\1 = \"#\\2\",/p'")
+  if command ~= nil then
+    local res = command:read("*a")
+    local compiled = loadstring(string.format("local M = {\n%s}; return M", res))()
+    return compiled
+  end
+  return nil
+end
+
+local function default_remap(col, config)
+  local highlight = M.util.highlight
+  -- Base groups for hopefully easier maintainability
+  highlight("Foreground",              { guifg = col.foreground, gui = "none" })
+  highlight("ForegroundHighlighted",   { guifg = col.background, guibg = col.foreground })
+  highlight("ForegroundFloat",         { guifg = col.foreground, guibg = col.black })
+  highlight("Black",                   { guifg = col.black, gui = "none" })
+  highlight("BlackHighlighted",        { guifg = col.background, guibg = col.black })
+  highlight("LightBlack",              { guifg = col.lightblack, gui = "none" })
+  highlight("LightBlackHighlighted",   { guifg = col.background, guibg = col.lightblack })
+  highlight("Red",                     { guifg = col.red, gui = "none" })
+  highlight("RedHighlighted",          { guifg = col.backgroun, guibg = col.red })
+  highlight("LightRed",                { guifg = col.lightred, gui = "none" })
+  highlight("LightRedHighlighted",     { guifg = col.background, guibg = col.lightred })
+  highlight("Green",                   { guifg = col.green, gui = "none" })
+  highlight("GreenHighlighted",        { guifg = col.background, guibg = col.green })
+  highlight("LightGreen",              { guifg = col.lightgreen, gui = "none" })
+  highlight("LightGreenHighlighted",   { guifg = col.background, guibg = col.lightgreen })
+  highlight("Yellow",                  { guifg = col.yellow, gui = "none" })
+  highlight("YellowHighlighted",       { guifg = col.background, guibg = col.yellow })
+  highlight("LightYellow",             { guifg = col.lightyellow, gui = "none" })
+  highlight("LightYellowHighlighted",  { guifg = col.background, guibg = col.lightyellow })
+  highlight("Blue",                    { guifg = col.blue, gui = "none" })
+  highlight("BlueHighlighted",         { guifg = col.background, guibg = col.blue })
+  highlight("LightBlue",               { guifg = col.lightblue, gui = "none" })
+  highlight("LightBlueHighlighted",    { guifg = col.background, guibg = col.lightblue })
+  highlight("LightBlueFloat",          { guifg = col.lightblue, guibg = col.black })
+  highlight("Magenta",                 { guifg = col.magenta, gui = "none" })
+  highlight("MagentaHighlighted",      { guifg = col.background, guibg = col.magenta })
+  highlight("LightMagenta",            { guifg = col.lightmagenta, gui = "none" })
+  highlight("LightMagentaHighlighted", { guifg = col.background, guibg = col.lightmagenta })
+  highlight("Cyan",                    { guifg = col.cyan, gui = "none" })
+  highlight("CyanHighlighted",         { guifg = col.background, guibg = col.cyan })
+  highlight("LightCyan",               { guifg = col.lightcyan, gui = "none" })
+  highlight("LightCyanHighlighted",    { guifg = col.background, guibg = col.lightcyan })
+  highlight("White",                   { guifg = col.white, gui = "none" })
+  highlight("WhiteHighlighted",        { guifg = col.background, guibg = col.white })
+  highlight("LightWhite",              { guifg = col.lightwhite, gui = "none" })
+  highlight("LightWhiteHighlighted",   { guifg = col.background, guibg = col.lightwhite })
+  highlight("UndercurlNormal", { gui = "undercurl", guisp = col.foreground })
+  highlight("UndercurlInfo",   { gui = "undercurl", guisp = col.lightgreen })
+  highlight("UndercurlWarn",   { gui = "undercurl", guisp = col.yellow })
+  highlight("UndercurlError",  { gui = "undercurl", guisp = col.lightred })
+  highlight("UnderlineNormal", { gui = "underline", guisp = col.foreground })
+  highlight("UnderlineInfo",   { gui = "underline", guisp = col.lightgreen })
+  highlight("UnderlineWarn",   { gui = "underline", guisp = col.yellow })
+  highlight("UnderlineError",  { gui = "underline", guisp = col.lightred })
+
+  highlight("Normal", { guifg = col.foreground, guibg = col.background })
+  highlight("Bold", { gui = "bold" })
+  highlight("Debug", "Yellow")
+  highlight("Directory", "Blue")
+  highlight("Error", "Red")
+  highlight("ErrorMsg", "Red")
+  highlight("Exception", "Red")
+  highlight("FoldColumn", "LightBlack")
+  highlight("Folded", "LightBlack")
+  highlight("IncSearch", "LightBlack")
+  highlight("Italic", { gui = "italic" })
+  highlight("Macro", "LightBlue")
+  highlight("NormalFloat", { guifg = col.foreground, guibg = col.background })
+  highlight("FloatBorder", { guifg = col.foreground, guibg = col.background })
+  highlight("NormalNC", { guifg = col.foreground, guibg = col.black })
+  highlight("TermCursor", { guifg = col.background, guibg = col.foreground, gui = 'none' })
+  highlight("TermCursorNC", { guifg = col.background, guibg = col.foreground })
+
+  highlight("MatchParen", "LightBlueHighlighted")
+  highlight("ModeMsg", "Yellow")
+  highlight("MoreMsg", "Yellow")
+  highlight("Question", "LightBlue")
+  highlight("Search", "YellowHighlighted")
+  highlight("Substitute", "YellowHighlighted")
+  highlight("SpecialKey", "ForegroundHighlighted")
+  highlight("TooLong", "ForegroundHighlighted")
+  highlight("Underlined", "Foreground")
+  highlight("Visual", "YellowHighlighted")
+  highlight("VisualNOS", "YellowHighlighted")
+  highlight("WarningMsg", "Red")
+  highlight("WildMenu", "ForegroundFloat")
+  highlight("Title", "Foreground")
+  highlight("Conceal", "Foreground")
+  highlight("Cursor", { guifg = col.background, guibg = col.foreground, gui = 'none' })
+  highlight("NonText", "Foreground")
+  highlight("LineNr", "White")
+  highlight("SignColumn", "Yellow")
+  highlight("StatusLine", { guifg = col.lightblue, guibg = col.black, gui = "none" })
+  highlight("StatusLineNC", { guifg = col.foreground, guibg = col.black, gui = "none" })
+  highlight("WinBar", "LightBlueFloat")
+  highlight("WinBarNC", "LightBlueFloatHighlighted")
+  highlight("VertSplit", "LightBlack")
+  highlight("ColorColumn", "Foreground")
+  highlight("CursorColumn", "Foreground")
+  highlight("CursorLine", { guibg = col.black, gui = "none" })
+  highlight("CursorLineNr", { guifg = col.lightwhite, guibg = col.black })
+  highlight("QuickFixLine", "Yellow")
+  highlight("PMenu", { guifg = col.lightblue, guibg = col.black })
+  highlight("PMenuSel", { guifg = col.black, guibg = col.lightblue })
+  highlight("TabLine", { guifg = col.foreground, guibg = col.black, gui = "bold" })
+  highlight("TabLineFill", { guifg = col.foreground, guibg = col.black, gui = "bold" })
+  highlight("TabLineSel", { guifg = col.black, guibg = col.foreground, gui = "bold" })
+
+  -- Standard syntax highlighting
+  highlight("Boolean", "LightRed")
+  highlight("Character", "Foreground")
+  highlight("Comment", { guifg = col.white, gui = "none" })
+  highlight("Conditional", "Yellow")
+  highlight("Constant", "Blue")
+  highlight("Define", "LightCyan")
+  highlight("Delimiter", "Foreground")
+  highlight("Float", "LightRed")
+  highlight("Function", "Foreground")
+  highlight("Identifier", "Yellow")
+  highlight("Include", "LightCyan")
+  highlight("Keyword", "LightBlue")
+  highlight("Label", "Yellow")
+  highlight("Number", "LightRed")
+  highlight("Operator", "Yellow")
+  highlight("PreProc", "LightBlue")
+  highlight("Repeat", "Foreground")
+  highlight("Special", "Foreground")
+  highlight("SpecialChar", "Foreground")
+  highlight("Statement", "LightBlue")
+  highlight("StorageClass", "LightBlue")
+  highlight("String", "LightGreen")
+  highlight("Structure", "Yellow")
+  highlight("Tag", "LightBlue")
+  highlight("Todo", "Yellow")
+  highlight("Type", "Yellow")
+  highlight("Typedef", "LightBlue")
+
+  -- Diff highlighting
+  highlight("DiffAdd", "Green")
+  highlight("DiffChange", "Yellow")
+  highlight("DiffDelete", "Red")
+  highlight("DiffText", "Foreground")
+  highlight("DiffAdded", "Foreground")
+  highlight("DiffFile", "Foreground")
+  highlight("DiffNewFile", "Foreground")
+  highlight("DiffLine", "Foreground")
+  highlight("DiffRemoved", "LightBlack")
+
+  -- Git highlighting
+  -- highlight("gitcommitOverflow", "Foreground")
+  -- highlight("gitcommitSummary", "Foreground")
+  -- highlight("gitcommitComment", "Foreground")
+  -- highlight("gitcommitUntracked", "Foreground")
+  -- highlight("gitcommitDiscarded", "Foreground")
+  -- highlight("gitcommitSelected", "Foreground")
+  -- highlight("gitcommitHeader", "Foreground")
+  -- highlight("gitcommitSelectedType", "Foreground")
+  -- highlight("gitcommitUnmergedType", "Foreground")
+  -- highlight("gitcommitDiscardedType", "Foreground")
+  -- highlight("gitcommitBranch", "Foreground")
+  -- highlight("gitcommitUntrackedFile", "Foreground")
+  -- highlight("gitcommitUnmergedFile", "Foreground")
+  -- highlight("gitcommitDiscardedFile", "Foreground")
+  -- highlight("gitcommitSelectedFile", "Foreground")
+
+  -- GitGutter highlighting
+  highlight("GitGutterAdd", "Green")
+  highlight("GitGutterChange", "Yellow")
+  highlight("GitGutterDelete", "Red")
+  highlight("GitGutterChangeDelete", "Yellow")
+
+  -- Spelling highlighting
+  highlight("SpellBad", "LightRed")
+  highlight("SpellLocal", "Foreground")
+  highlight("SpellCap", "Foreground")
+  highlight("SpellRare", "LightBlue")
+
+  -- Diagnostics highlighting
+  highlight("DiagnosticError", { guifg = col.red, gui = "none" })
+  highlight("DiagnosticWarn", { guifg = col.yellow, gui = "none" })
+  highlight("DiagnosticInfo", { guifg = col.green, gui = "none" })
+  highlight("DiagnosticHint", { guifg = col.blue, gui = "none" })
+  highlight("DiagnosticUnderlineError", "UndercurlError")
+  highlight("DiagnosticUnderlineWarning", "UndercurlWarn")
+  highlight("DiagnosticUnderlineWarn", "UndercurlWarn")
+  highlight("DiagnosticUnderlineInformation", "UndercurlInfo")
+  highlight("DiagnosticUnderlineHint", "UndercurlNormal")
+
+  -- LSP Diagnostics highlighting
+  highlight("LspReferenceText", { gui = "underline", guisp = col.blue })
+  highlight("LspReferenceRead", { gui = "underline", guisp = col.blue })
+  highlight("LspReferenceWrite", { gui = "underline", guisp = col.blue })
+  highlight("LspDiagnosticsDefaultError", 'DiagnosticError')
+  highlight("LspDiagnosticsDefaultWarning", 'DiagnosticWarn')
+  highlight("LspDiagnosticsDefaultInformation", 'DiagnosticInfo')
+  highlight("LspDiagnosticsDefaultHint", 'DiagnosticHint')
+  highlight("LspDiagnosticsUnderlineError", 'DiagnosticUnderlineError')
+  highlight("LspDiagnosticsUnderlineWarning", 'DiagnosticUnderlineWarning')
+  highlight("LspDiagnosticsUnderlineInformation", 'DiagnosticUnderlineInformation')
+  highlight("LspDiagnosticsUnderlineHint", 'DiagnosticUnderlineHint')
+
+  highlight("NvimInternalError", "RedHighlighted")
+
+  if config.telescope then
+    highlight("TelescopeBorder", { guifg = col.foreground, guibg = col.background })
+    highlight("TelescopePromptBorder", { guifg = col.foreground, guibg = col.background })
+    highlight("TelescopePromptNormal", { guifg = col.foreground, guibg = col.background })
+    highlight("TelescopeNormal", { guifg = col.foreground, guibg = col.background })
+    highlight("TelescopePromptPrefix", { guifg = col.yellow, guibg = col.background })
+    highlight("TelescopePreviewTitle", { guifg = col.yellow, guibg = col.background })
+    highlight("TelescopePromptTitle", { guifg = col.yellow, guibg = col.background })
+    highlight("TelescopeResultsTitle", { guifg = col.yellow, guibg = col.background })
+    highlight("TelescopeSelection", { guifg = col.foreground, guibg = col.black })
+    highlight("TelescopePreviewLine", { guifg = col.yellow, guibg = col.yellow, gui = 'none', guisp = nil })
+  end
+end
+
+function M.setup(userconf)
+  userconf = userconf or {}
+  M.config = {
+    telescope           = userconf.telescope or true,
+    apply_default_remap = userconf.apply_default_remap or true,
+    parse_fn            = userconf.parse_fn or default_parse,
+    remap_fn            = userconf.remap_fn or nil,
+  }
+
+  M.colors = M.config.parse_fn() or {}
+
+  if M.config.colors ~= nil then
+    M.colors = vim.tbl_extend("force", M.colors, M.config.colors or {})
+  end
+
+  -- add 'aliases' for numbered colors in table
+  M.colors.black        = M.colors.color0
+  M.colors.lightblack   = M.colors.color8
+  M.colors.red          = M.colors.color1
+  M.colors.lightred     = M.colors.color9
+  M.colors.green        = M.colors.color2
+  M.colors.lightgreen   = M.colors.color10
+  M.colors.yellow       = M.colors.color3
+  M.colors.lightyellow  = M.colors.color11
+  M.colors.blue         = M.colors.color4
+  M.colors.lightblue    = M.colors.color12
+  M.colors.magenta      = M.colors.color5
+  M.colors.lightmagenta = M.colors.color13
+  M.colors.cyan         = M.colors.color6
+  M.colors.lightcyan    = M.colors.color14
+  M.colors.white        = M.colors.color7
+  M.colors.lightwhite   = M.colors.color15
+
+  if vim.fn.exists('syntax_on') then
+      vim.cmd('syntax reset')
+  end
+
+  if M.config.apply_default_remap then
+    default_remap(M.colors, M.config)
+  end
+
+  if M.config.remap_fn ~= nil then
+    M.config.remap_fn(M.colors, M.config)
+  end
+
+  vim.g.terminal_color_fg = M.colors.foreground
+  vim.g.terminal_color_bg = M.colors.background
+  vim.g.terminal_color_0  = M.colors.color0
+  vim.g.terminal_color_1  = M.colors.color1
+  vim.g.terminal_color_2  = M.colors.color2
+  vim.g.terminal_color_3  = M.colors.color3
+  vim.g.terminal_color_4  = M.colors.color4
+  vim.g.terminal_color_5  = M.colors.color5
+  vim.g.terminal_color_6  = M.colors.color6
+  vim.g.terminal_color_7  = M.colors.color7
+  vim.g.terminal_color_8  = M.colors.color8
+  vim.g.terminal_color_9  = M.colors.color9
+  vim.g.terminal_color_10 = M.colors.color10
+  vim.g.terminal_color_11 = M.colors.color11
+  vim.g.terminal_color_12 = M.colors.color12
+  vim.g.terminal_color_13 = M.colors.color13
+  vim.g.terminal_color_14 = M.colors.color14
+  vim.g.terminal_color_15 = M.colors.color15
+
+  return M
+end
+
+return M
+
+-- function M.load(self)
+--   if vim.fn.exists('syntax_on') then
+--       vim.cmd('syntax reset')
+--   end
+--
+--   create_hi_groups("Foreground", { guifg = self.colors.foreground, guibg = self.colors.background })
+--   create_hi_groups("ForegroundFloat", { guifg = self.colors.foreground, guibg = self.colors.color0 })
+--   create_hi_groups("Black", { guifg = self.colors.color0, guibg = self.colors.background })
+--   create_hi_groups("LightBlack", { guifg = self.colors.color8, guibg = self.colors.background })
+--   create_hi_groups("Red", { guifg = self.colors.color1, guibg = self.colors.background })
+--   create_hi_groups("LightRed", { guifg = self.colors.color9, guibg = self.colors.background })
+--   create_hi_groups("Green", { guifg = self.colors.color2, guibg = self.colors.background })
+--   create_hi_groups("LightGreen", { guifg = self.colors.color10, guibg = self.colors.background })
+--   create_hi_groups("Yellow", { guifg = self.colors.color3, guibg = self.colors.background })
+--   create_hi_groups("LightYellow", { guifg = self.colors.color11, guibg = self.colors.background })
+--   create_hi_groups("Blue", { guifg = self.colors.color4, guibg = self.colors.background })
+--   create_hi_groups("LightBlue", { guifg = self.colors.color12, guibg = self.colors.background })
+--   create_hi_groups("LightBlueFloat", { guifg = self.colors.color12, guibg = self.colors.color0 })
+--   create_hi_groups("Magenta", { guifg = self.colors.color5, guibg = self.colors.background })
+--   create_hi_groups("LightMagenta", { guifg = self.colors.color13, guibg = self.colors.background })
+--   create_hi_groups("Cyan", { guifg = self.colors.color6, guibg = self.colors.background })
+--   create_hi_groups("LightCyan", { guifg = self.colors.color14, guibg = self.colors.background })
+--   create_hi_groups("White", { guifg = self.colors.color7, guibg = self.colors.background })
+--   create_hi_groups("LightWhite", { guifg = self.colors.color15, guibg = self.colors.background })
+--   highlight("UndercurlNormal", { gui = "undercurl", guisp = self.colors.foreground })
+--   highlight("UndercurlInfo", { gui = "undercurl", guisp = self.colors.color10 })
+--   highlight("UndercurlWarn", { gui = "undercurl", guisp = self.colors.color3 })
+--   highlight("UndercurlError", { gui = "undercurl", guisp = self.colors.color9 })
+--   highlight("UnderlineNormal", { gui = "underline", guisp = self.colors.foreground })
+--   highlight("UnderlineInfo", { gui = "underline", guisp = self.colors.color10 })
+--   highlight("UnderlineWarn", { gui = "underline", guisp = self.colors.color3 })
+--   highlight("UnderlineError", { gui = "underline", guisp = self.colors.color9 })
+--
+--   highlight("Normal", { guifg = self.colors.foreground, guibg = self.colors.background})
+--   highlight("Bold", { gui = "bold" })
+--   highlight("Debug", "Yellow")
+--   highlight("Directory", "Blue")
+--   highlight("Error", "Red")
+--   highlight("ErrorMsg", "Red")
+--   highlight("Exception", "Red")
+--   highlight("FoldColumn", "LightBlack")
+--   highlight("Folded", "LightBlack")
+--   highlight("IncSearch", "LightBlack")
+--   highlight("Italic", "Foreground")
+--   highlight("Macro", "Magenta")
+--
+--   highlight("MatchParen", "ForegroundHighlighted")
+--   highlight("ModeMsg", "Yellow")
+--   highlight("MoreMsg", "Yellow")
+--   highlight("Question", "LightBlue")
+--   highlight("Search", "YellowHighlighted")
+--   highlight("Substitute", "YellowHighlighted")
+--   highlight("SpecialKey", "ForegroundHighlighted")
+--   highlight("TooLong", "ForegroundHighlighted")
+--   highlight("Underlined", "Foreground")
+--   highlight("Visual", "YellowHighlighted")
+--   highlight("VisualNOS", "YellowHighlighted")
+--   highlight("WarningMsg", "Red")
+--   highlight("WildMenu", "ForegroundFloat")
+--   highlight("Title", "Foreground")
+--   highlight("Conceal", "Foreground")
+--   highlight("Cursor", "ForegroundHighlighted")
+--   highlight("NonText", "Foreground")
+--   highlight("LineNr", "LightBlack")
+--   highlight("SignColumn", "Yellow")
+--   highlight("StatusLine", { guifg = self.colors.color12, guibg = self.colors.color0, gui = "none" })
+--   highlight("StatusLineNC", { guifg = self.colors.foreground, guibg = self.colors.color0, gui = "none" })
+--   highlight("WinBar", "LightBlueFloat")
+--   highlight("WinBarNC", "LightBlueFloatHighlighted")
+--   highlight("VertSplit", "LightBlack")
+--   highlight("ColorColumn", "Foreground")
+--   highlight("CursorColumn", "Foreground")
+--   -- highlight("CursorLine", "ForegroundFloat")
+--   highlight("CursorLine", { guibg = self.colors.color0, gui = "none" })
+--   highlight("CursorLineNr", { guifg = self.colors.color8, guibg = self.colors.color1 })
+--   -- highlight("CursorLineNr", "Foreground")
+--   -- highlight("CursorLine", { guibg = self.colors.color0, gui = "none" })
+--   highlight("QuickFixLine", "Yellow")
+--   highlight("PMenu", "LightBlueFloat")
+--   highlight("PMenuSel", "LightBlueFloatHighlighted")
+--   highlight("TabLine", "Foreground")
+--   highlight("TabLineFill", "Foreground")
+--   highlight("TabLineSel", "Foreground")
+--
+--   -- Standard syntax highlighting
+--   highlight("Boolean", "White")
+--   highlight("Character", "Foreground")
+--   highlight("Comment", "LightBlack")
+--   highlight("Conditional", "Yellow")
+--   highlight("Constant", "Blue")
+--   highlight("Define", "LightCyan")
+--   highlight("Delimiter", "Foreground")
+--   highlight("Float", "White")
+--   highlight("Function", "Foreground")
+--   highlight("Identifier", "Yellow")
+--   highlight("Include", "LightCyan")
+--   highlight("Keyword", "LightBlue")
+--   highlight("Label", "Yellow")
+--   highlight("Number", "White")
+--   highlight("Operator", "Yellow")
+--   highlight("PreProc", "LightBlue")
+--   highlight("Repeat", "Foreground")
+--   highlight("Special", "Foreground")
+--   highlight("SpecialChar", "Foreground")
+--   highlight("Statement", "LightBlue")
+--   highlight("StorageClass", "LightBlue")
+--   highlight("String", "LightGreen")
+--   highlight("Structure", "Yellow")
+--   highlight("Tag", "LightBlue")
+--   highlight("Todo", "Yellow")
+--   highlight("Type", "Yellow")
+--   highlight("Typedef", "LightBlue")
+--
+--   -- Diff highlighting
+--   highlight("DiffAdd", "Green")
+--   highlight("DiffChange", "Yellow")
+--   highlight("DiffDelete", "Red")
+--   highlight("DiffText", "Foreground")
+--   highlight("DiffAdded", "Foreground")
+--   highlight("DiffFile", "Foreground")
+--   highlight("DiffNewFile", "Foreground")
+--   highlight("DiffLine", "Foreground")
+--   highlight("DiffRemoved", "LightBlack")
+--
+--   -- Git highlighting
+--   highlight("gitcommitOverflow", "Foreground")
+--   highlight("gitcommitSummary", "Foreground")
+--   highlight("gitcommitComment", "Foreground")
+--   highlight("gitcommitUntracked", "Foreground")
+--   highlight("gitcommitDiscarded", "Foreground")
+--   highlight("gitcommitSelected", "Foreground")
+--   highlight("gitcommitHeader", "Foreground")
+--   highlight("gitcommitSelectedType", "Foreground")
+--   highlight("gitcommitUnmergedType", "Foreground")
+--   highlight("gitcommitDiscardedType", "Foreground")
+--   highlight("gitcommitBranch", "Foreground")
+--   highlight("gitcommitUntrackedFile", "Foreground")
+--   highlight("gitcommitUnmergedFile", "Foreground")
+--   highlight("gitcommitDiscardedFile", "Foreground")
+--   highlight("gitcommitSelectedFile", "Foreground")
+--
+--   -- GitGutter highlighting
+--   highlight("GitGutterAdd", "Green")
+--   highlight("GitGutterChange", "Yellow")
+--   highlight("GitGutterDelete", "Red")
+--   highlight("GitGutterChangeDelete", "Yellow")
+--
+--   -- Spelling highlighting
+--   highlight("SpellBad", "LightRed")
+--   highlight("SpellLocal", "Foreground")
+--   highlight("SpellCap", "Foreground")
+--   highlight("SpellRare", "LightBlue")
+--
+--   highlight("DiagnosticError", { guifg = self.colors.color1, gui = "none" })
+--   highlight("DiagnosticWarn", { guifg = self.colors.color3, gui = "none" })
+--   highlight("DiagnosticInfo", { guifg = self.colors.color2, gui = "none" })
+--   highlight("DiagnosticHint", { guifg = self.colors.color4, gui = "none" })
+--   highlight("DiagnosticUnderlineError", "UndercurlError")
+--   highlight("DiagnosticUnderlineWarning", "UndercurlWarn")
+--   highlight("DiagnosticUnderlineWarn", "UndercurlWarn")
+--   highlight("DiagnosticUnderlineInformation", "UndercurlInfo")
+--   highlight("DiagnosticUnderlineHint", "UndercurlNormal")
+--
+--   highlight("LspReferenceText", { gui = "underline", guisp = self.colors.color4 })
+--   highlight("LspReferenceRead", { gui = "underline", guisp = self.colors.color4 })
+--   highlight("LspReferenceWrite", { gui = "underline", guisp = self.colors.color4 })
+--   highlight("LspDiagnosticsDefaultError", 'DiagnosticError')
+--   highlight("LspDiagnosticsDefaultWarning", 'DiagnosticWarn')
+--   highlight("LspDiagnosticsDefaultInformation", 'DiagnosticInfo')
+--   highlight("LspDiagnosticsDefaultHint", 'DiagnosticHint')
+--   highlight("LspDiagnosticsUnderlineError", 'DiagnosticUnderlineError')
+--   highlight("LspDiagnosticsUnderlineWarning", 'DiagnosticUnderlineWarning')
+--   highlight("LspDiagnosticsUnderlineInformation", 'DiagnosticUnderlineInformation')
+--   highlight("LspDiagnosticsUnderlineHint", 'DiagnosticUnderlineHint')
+--
+--   highlight("NvimInternalError", "RedHighlighted")
+
+  -- hilink("TSAnnotation", "Foreground")
+  -- hilink("TSAttribute", "Foreground")
+  -- hilink("TSBoolean", "Foreground")
+  -- hilink("TSCharacter", "Foreground")
+  -- hilink("TSComment", "Foreground")
+  -- hilink("TSConstructor", "Foreground")
+  -- hilink("TSConditional", "Foreground")
+  -- hilink("TSConstant", "Foreground")
+  -- hilink("TSConstBuiltin", "Foreground")
+  -- hilink("TSConstMacro", "Foreground")
+  -- hilink("TSError", "Foreground")
+  -- hilink("TSException", "Foreground")
+  -- hilink("TSField", "Foreground")
+  -- hilink("TSFloat", "Foreground")
+  -- hilink("TSFunction", "Foreground")
+  -- hilink("TSFuncBuiltin", "Foreground")
+  -- hilink("TSFuncMacro", "Foreground")
+  -- hilink("TSInclude", "Foreground")
+  -- hilink("TSKeyword", "Foreground")
+  -- hilink("TSKeywordFunction", "Foreground")
+  -- hilink("TSKeywordOperator", "Foreground")
+  -- hilink("TSLabel", "Foreground")
+  -- hilink("TSMethod", "Foreground")
+  -- hilink("TSNamespace", "Foreground")
+  -- hilink("TSNone", "Foreground")
+  -- hilink("TSNumber", "Foreground")
+  -- hilink("TSOperator", "Foreground")
+  -- hilink("TSParameter", "Foreground")
+  -- hilink("TSParameterReference", "Foreground")
+  -- hilink("TSProperty", "Foreground")
+  -- hilink("TSPunctDelimiter", "Foreground")
+  -- hilink("TSPunctBracket", "Foreground")
+  -- hilink("TSPunctSpecial", "Foreground")
+  -- hilink("TSRepeat", "Foreground")
+  -- hilink("TSString", "Foreground")
+  -- hilink("TSStringRegex", "Foreground")
+  -- hilink("TSStringEscape", "Foreground")
+  -- hilink("TSSymbol", "Foreground")
+  -- hilink("TSTag", "Foreground")
+  -- hilink("TSTagDelimiter", "Foreground")
+  -- hilink("TSText", "Foreground")
+  -- hilink("TSStrong", "Foreground")
+  -- hilink("TSEmphasis", "Foreground")
+  -- hilink("TSUnderline", "Foreground")
+  -- hilink("TSStrike", "Foreground")
+  -- hilink("TSTitle", "Foreground")
+  -- hilink("TSLiteral", "Foreground")
+  -- hilink("TSURI", "Foreground")
+  -- hilink("TSType", "Foreground")
+  -- hilink("TSTypeBuiltin", "Foreground")
+  -- hilink("TSVariable", "Foreground")
+  -- hilink("TSVariableBuiltin", "Foreground")
+  --
+  -- hilink("TSDefinition", "Foreground")
+  -- hilink("TSDefinitionUsage", "Foreground")
+  -- hilink("TSCurrentScope", "Foreground")
+
+  -- highlight("Normal", { guifg = self.colors.foreground, guibg = self.colors.background, gui = nil, guisp = nil })
+  -- highlight("Bold", { guifg = nil, guibg = nil, gui = 'bold', guisp = nil })
+  -- highlight("Debug", { guifg = self.colors.color8, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Directory", { guifg = self.colors.color13, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Error", { guifg = self.colors.color0, guibg = self.colors.color8, gui = nil, guisp = nil })
+  -- highlight("ErrorMsg", { guifg = self.colors.color8, guibg = self.colors.color0, gui = nil, guisp = nil })
+  -- highlight("Exception", { guifg = self.colors.color8, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("FoldColumn", { guifg = self.colors.color12, guibg = self.colors.color0, gui = nil, guisp = nil })
+  -- highlight("Folded", { guifg = self.colors.color3, guibg = self.colors.color1, gui = nil, guisp = nil })
+  -- highlight("IncSearch", { guifg = self.colors.color1, guibg = self.colors.color9, gui = 'none', guisp = nil })
+  -- highlight("Italic", { guifg = nil, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("Macro", { guifg = self.colors.color8, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("MatchParen", { guifg = nil, guibg = self.colors.color3, gui = nil, guisp = nil })
+  -- highlight("ModeMsg", { guifg = self.colors.color11, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("MoreMsg", { guifg = self.colors.color11, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Question", { guifg = self.colors.color13, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Search", { guifg = self.colors.color1, guibg = self.colors.color10, gui = nil, guisp = nil })
+  -- highlight("Substitute", { guifg = self.colors.color1, guibg = self.colors.color10, gui = 'none', guisp = nil })
+  -- highlight("SpecialKey", { guifg = self.colors.color3, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("TooLong", { guifg = self.colors.color8, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Underlined", { guifg = self.colors.color8, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Visual", { guifg = nil, guibg = self.colors.color2, gui = nil, guisp = nil })
+  -- highlight("VisualNOS", { guifg = self.colors.color8, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("WarningMsg", { guifg = self.colors.color8, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("WildMenu", { guifg = self.colors.color8, guibg = self.colors.color10, gui = nil, guisp = nil })
+  -- highlight("Title", { guifg = self.colors.color13, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("Conceal", { guifg = self.colors.color13, guibg = self.colors.color0, gui = nil, guisp = nil })
+  -- highlight("Cursor", { guifg = self.colors.color0, guibg = self.colors.color5, gui = nil, guisp = nil })
+  -- highlight("NonText", { guifg = self.colors.color3, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("LineNr", { guifg = self.colors.color4, guibg = self.colors.color0, gui = nil, guisp = nil })
+  -- highlight("SignColumn", { guifg = self.colors.color4, guibg = self.colors.color0, gui = nil, guisp = nil })
+  -- highlight("StatusLine", { guifg = self.colors.color5, guibg = self.colors.color2, gui = 'none', guisp = nil })
+  -- highlight("StatusLineNC", { guifg = self.colors.color4, guibg = self.colors.color1, gui = 'none', guisp = nil })
+  -- highlight("WinBar", { guifg = self.colors.color5, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("WinBarNC", { guifg = self.colors.color4, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("VertSplit", { guifg = self.colors.color5, guibg = self.colors.color0, gui = 'none', guisp = nil })
+  -- highlight("ColorColumn", { guifg = nil, guibg = self.colors.color1, gui = 'none', guisp = nil })
+  -- highlight("CursorColumn", { guifg = nil, guibg = self.colors.color1, gui = 'none', guisp = nil })
+  -- highlight("CursorLine", { guifg = nil, guibg = self.colors.color1, gui = 'none', guisp = nil })
+  -- highlight("CursorLineNr", { guifg = self.colors.color4, guibg = self.colors.color1, gui = nil, guisp = nil })
+  -- highlight("QuickFixLine", { guifg = nil, guibg = self.colors.color1, gui = 'none', guisp = nil })
+  -- highlight("PMenu", { guifg = self.colors.color5, guibg = self.colors.color1, gui = 'none', guisp = nil })
+  -- highlight("PMenuSel", { guifg = self.colors.color1, guibg = self.colors.color5, gui = nil, guisp = nil })
+  -- highlight("TabLine", { guifg = self.colors.color3, guibg = self.colors.color1, gui = 'none', guisp = nil })
+  -- highlight("TabLineFill", { guifg = self.colors.color3, guibg = self.colors.color1, gui = 'none', guisp = nil })
+  -- highlight("TabLineSel", { guifg = self.colors.color11, guibg = self.colors.color1, gui = 'none', guisp = nil })
+
+  -- Standard syntax highlighting
+  -- highlight("Boolean", { guifg = self.colors.color9, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Character", { guifg = self.colors.color8, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Comment", { guifg = self.colors.color3, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Conditional", { guifg = self.colors.color14, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Constant", { guifg = self.colors.color9, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Define", { guifg = self.colors.color14, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("Delimiter", { guifg = self.colors.color15, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Float", { guifg = self.colors.color9, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Function", { guifg = self.colors.color13, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Identifier", { guifg = self.colors.color8, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("Include", { guifg = self.colors.color13, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Keyword", { guifg = self.colors.color14, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Label", { guifg = self.colors.color10, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Number", { guifg = self.colors.color9, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Operator", { guifg = self.colors.color5, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("PreProc", { guifg = self.colors.color10, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Repeat", { guifg = self.colors.color10, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Special", { guifg = self.colors.color12, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("SpecialChar", { guifg = self.colors.color15, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Statement", { guifg = self.colors.color8, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("StorageClass", { guifg = self.colors.color10, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("String", { guifg = self.colors.color11, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Structure", { guifg = self.colors.color14, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Tag", { guifg = self.colors.color10, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("Todo", { guifg = self.colors.color10, guibg = self.colors.color1, gui = nil, guisp = nil })
+  -- highlight("Type", { guifg = self.colors.color10, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("Typedef", { guifg = self.colors.color10, guibg = nil, gui = nil, guisp = nil })
+  --
+  -- -- Diff highlighting
+  -- highlight("DiffAdd", { guifg = self.colors.color11, guibg = self.colors.color0, gui = nil, guisp = nil })
+  -- highlight("DiffChange", { guifg = self.colors.color3, guibg = self.colors.color0, gui = nil, guisp = nil })
+  -- highlight("DiffDelete", { guifg = self.colors.color8, guibg = self.colors.color0, gui = nil, guisp = nil })
+  -- highlight("DiffText", { guifg = self.colors.color13, guibg = self.colors.color0, gui = nil, guisp = nil })
+  -- highlight("DiffAdded", { guifg = self.colors.color11, guibg = self.colors.color0, gui = nil, guisp = nil })
+  -- highlight("DiffFile", { guifg = self.colors.color8, guibg = self.colors.color0, gui = nil, guisp = nil })
+  -- highlight("DiffNewFile", { guifg = self.colors.color11, guibg = self.colors.color0, gui = nil, guisp = nil })
+  -- highlight("DiffLine", { guifg = self.colors.color13, guibg = self.colors.color0, gui = nil, guisp = nil })
+  -- highlight("DiffRemoved", { guifg = self.colors.color8, guibg = self.colors.color0, gui = nil, guisp = nil })
+  --
+  -- -- Git highlighting
+  -- highlight("gitcommitOverflow", { guifg = self.colors.color8, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("gitcommitSummary", { guifg = self.colors.color11, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("gitcommitComment", { guifg = self.colors.color3, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("gitcommitUntracked", { guifg = self.colors.color3, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("gitcommitDiscarded", { guifg = self.colors.color3, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("gitcommitSelected", { guifg = self.colors.color3, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("gitcommitHeader", { guifg = self.colors.color14, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("gitcommitSelectedType", { guifg = self.colors.color13, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("gitcommitUnmergedType", { guifg = self.colors.color13, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("gitcommitDiscardedType", { guifg = self.colors.color13, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("gitcommitBranch", { guifg = self.colors.color9, guibg = nil, gui = 'bold', guisp = nil })
+  -- highlight("gitcommitUntrackedFile", { guifg = self.colors.color10, guibg = nil, gui = nil, guisp = nil })
+  -- highlight("gitcommitUnmergedFile", { guifg = self.colors.color8, guibg = nil, gui = 'bold', guisp = nil })
+  -- highlight("gitcommitDiscardedFile", { guifg = self.colors.color8, guibg = nil, gui = 'bold', guisp = nil })
+  -- highlight("gitcommitSelectedFile", { guifg = self.colors.color11, guibg = nil, gui = 'bold', guisp = nil })
+  --
+  -- -- GitGutter highlighting
+  -- highlight("GitGutterAdd", { guifg = self.colors.color11, guibg = self.colors.color0, gui = nil, guisp = nil })
+  -- highlight("GitGutterChange", { guifg = self.colors.color13, guibg = self.colors.color0, gui = nil, guisp = nil })
+  -- highlight("GitGutterDelete", { guifg = self.colors.color8, guibg = self.colors.color0, gui = nil, guisp = nil })
+  -- highlight("GitGutterChangeDelete", { guifg = self.colors.color14, guibg = self.colors.color0, gui = nil, guisp = nil })
+  --
+  -- -- Spelling highlighting
+  -- highlight("SpellBad", { guifg = nil, guibg = nil, gui = 'undercurl', guisp = self.colors.color8 })
+  -- highlight("SpellLocal", { guifg = nil, guibg = nil, gui = 'undercurl', guisp = self.colors.color12 })
+  -- highlight("SpellCap", { guifg = nil, guibg = nil, gui = 'undercurl', guisp = self.colors.color13 })
+  -- highlight("SpellRare", { guifg = nil, guibg = nil, gui = 'undercurl', guisp = self.colors.color14 })
+  --
+  -- highlight("DiagnosticError", { guifg = self.colors.color8, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("DiagnosticWarn", { guifg = self.colors.color14, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("DiagnosticInfo", { guifg = self.colors.color5, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("DiagnosticHint", { guifg = self.colors.color12, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("DiagnosticUnderlineError", { guifg = nil, guibg = nil, gui = 'undercurl', guisp = self.colors.color8 })
+  -- highlight("DiagnosticUnderlineWarning", { guifg = nil, guibg = nil, gui = 'undercurl', guisp = self.colors.color14 })
+  -- highlight("DiagnosticUnderlineWarn", { guifg = nil, guibg = nil, gui = 'undercurl', guisp = self.colors.color14 })
+  -- highlight("DiagnosticUnderlineInformation", { guifg = nil, guibg = nil, gui = 'undercurl', guisp = self.colors.color15 })
+  -- highlight("DiagnosticUnderlineHint", { guifg = nil, guibg = nil, gui = 'undercurl', guisp = self.colors.color12 })
+  --
+  -- highlight("LspReferenceText", { guifg = nil, guibg = nil, gui = 'underline', guisp = self.colors.color4 })
+  -- highlight("LspReferenceRead", { guifg = nil, guibg = nil, gui = 'underline', guisp = self.colors.color4 })
+  -- highlight("LspReferenceWrite", { guifg = nil, guibg = nil, gui = 'underline', guisp = self.colors.color4 })
+  -- highlight("LspDiagnosticsDefaultError", 'DiagnosticError')
+  -- highlight("LspDiagnosticsDefaultWarning", 'DiagnosticWarn')
+  -- highlight("LspDiagnosticsDefaultInformation", 'DiagnosticInfo')
+  -- highlight("LspDiagnosticsDefaultHint", 'DiagnosticHint')
+  -- highlight("LspDiagnosticsUnderlineError", 'DiagnosticUnderlineError')
+  -- highlight("LspDiagnosticsUnderlineWarning", 'DiagnosticUnderlineWarning')
+  -- highlight("LspDiagnosticsUnderlineInformation", 'DiagnosticUnderlineInformation')
+  -- highlight("LspDiagnosticsUnderlineHint", 'DiagnosticUnderlineHint')
+  --
+  -- highlight("TSAnnotation", { guifg = self.colors.color15, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSAttribute", { guifg = self.colors.color10, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSBoolean", { guifg = self.colors.color9, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSCharacter", { guifg = self.colors.color8, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSComment", { guifg = self.colors.color3, guibg = nil, gui = 'italic', guisp = nil })
+  -- highlight("TSConstructor", { guifg = self.colors.color13, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSConditional", { guifg = self.colors.color14, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSConstant", { guifg = self.colors.color9, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSConstBuiltin", { guifg = self.colors.color9, guibg = nil, gui = 'italic', guisp = nil })
+  -- highlight("TSConstMacro", { guifg = self.colors.color8, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSError", { guifg = self.colors.color8, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSException", { guifg = self.colors.color8, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSField", { guifg = self.colors.color5, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSFloat", { guifg = self.colors.color9, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSFunction", { guifg = self.colors.color13, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSFuncBuiltin", { guifg = self.colors.color13, guibg = nil, gui = 'italic', guisp = nil })
+  -- highlight("TSFuncMacro", { guifg = self.colors.color8, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSInclude", { guifg = self.colors.color13, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSKeyword", { guifg = self.colors.color14, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSKeywordFunction", { guifg = self.colors.color14, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSKeywordOperator", { guifg = self.colors.color14, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSLabel", { guifg = self.colors.color10, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSMethod", { guifg = self.colors.color13, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSNamespace", { guifg = self.colors.color8, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSNone", { guifg = self.colors.color5, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSNumber", { guifg = self.colors.color9, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSOperator", { guifg = self.colors.color5, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSParameter", { guifg = self.colors.color5, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSParameterReference", { guifg = self.colors.color5, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSProperty", { guifg = self.colors.color5, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSPunctDelimiter", { guifg = self.colors.color15, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSPunctBracket", { guifg = self.colors.color5, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSPunctSpecial", { guifg = self.colors.color5, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSRepeat", { guifg = self.colors.color14, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSString", { guifg = self.colors.color11, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSStringRegex", { guifg = self.colors.color12, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSStringEscape", { guifg = self.colors.color12, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSSymbol", { guifg = self.colors.color11, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSTag", { guifg = self.colors.color10, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSTagDelimiter", { guifg = self.colors.color15, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSText", { guifg = self.colors.color5, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSStrong", { guifg = nil, guibg = nil, gui = 'bold', guisp = nil })
+  -- highlight("TSEmphasis", { guifg = self.colors.color9, guibg = nil, gui = 'italic', guisp = nil })
+  -- highlight("TSUnderline", { guifg = self.colors.color0, guibg = nil, gui = 'underline', guisp = nil })
+  -- highlight("TSStrike", { guifg = self.colors.color0, guibg = nil, gui = 'strikethrough', guisp = nil })
+  -- highlight("TSTitle", { guifg = self.colors.color13, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSLiteral", { guifg = self.colors.color9, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSURI", { guifg = self.colors.color9, guibg = nil, gui = 'underline', guisp = nil })
+  -- highlight("TSType", { guifg = self.colors.color10, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSTypeBuiltin", { guifg = self.colors.color10, guibg = nil, gui = 'italic', guisp = nil })
+  -- highlight("TSVariable", { guifg = self.colors.color8, guibg = nil, gui = 'none', guisp = nil })
+  -- highlight("TSVariableBuiltin", { guifg = self.colors.color8, guibg = nil, gui = 'italic', guisp = nil })
+  --
+  -- highlight("TSDefinition", { guifg = nil, guibg = nil, gui = 'underline', guisp = self.colors.color4 })
+  -- highlight("TSDefinitionUsage", { guifg = nil, guibg = nil, gui = 'underline', guisp = self.colors.color4 })
+  -- highlight("TSCurrentScope", { guifg = nil, guibg = nil, gui = 'bold', guisp = nil })
+
+  -- if vim.fn.has('nvim-0.8.0') then
+  --     highlight('@comment', 'TSComment')
+  --     highlight('@error', 'TSError')
+  --     highlight('@none', 'TSNone')
+  --     highlight('@preproc', 'PreProc')
+  --     highlight('@define', 'Define')
+  --     highlight('@operator', 'TSOperator')
+  --     highlight('@punctuation.delimiter', 'TSPunctDelimiter')
+  --     highlight('@punctuation.bracket', 'TSPunctBracket')
+  --     highlight('@punctuation.special', 'TSPunctSpecial')
+  --     highlight('@string', 'TSString')
+  --     highlight('@string.regex', 'TSStringRegex')
+  --     highlight('@string.escape', 'TSStringEscape')
+  --     highlight('@string.special', 'SpecialChar')
+  --     highlight('@character', 'TSCharacter')
+  --     highlight('@character.special', 'SpecialChar')
+  --     highlight('@boolean', 'TSBoolean')
+  --     highlight('@number', 'TSNumber')
+  --     highlight('@float', 'TSFloat')
+  --     highlight('@function', 'TSFunction')
+  --     highlight('@function.call', 'TSFunction')
+  --     highlight('@function.builtin', 'TSFuncBuiltin')
+  --     highlight('@function.macro', 'TSFuncMacro')
+  --     highlight('@method', 'TSMethod')
+  --     highlight('@method.call', 'TSMethod')
+  --     highlight('@constructor', 'TSConstructor')
+  --     highlight('@parameter', 'TSParameter')
+  --     highlight('@keyword', 'TSKeyword')
+  --     highlight('@keyword.function', 'TSKeywordFunction')
+  --     highlight('@keyword.operator', 'TSKeywordOperator')
+  --     highlight('@keyword.return', 'TSKeyword')
+  --     highlight('@conditional', 'TSConditional')
+  --     highlight('@repeat', 'TSRepeat')
+  --     highlight('@debug', 'Debug')
+  --     highlight('@label', 'TSLabel')
+  --     highlight('@include', 'TSInclude')
+  --     highlight('@exception', 'TSException')
+  --     highlight('@type', 'TSType')
+  --     highlight('@type.builtin', 'TSTypeBuiltin')
+  --     highlight('@type.qualifier', 'TSType')
+  --     highlight('@type.definition', 'TSType')
+  --     highlight('@storageclass', 'StorageClass')
+  --     highlight('@attribute', 'TSAttribute')
+  --     highlight('@field', 'TSField')
+  --     highlight('@property', 'TSProperty')
+  --     highlight('@variable', 'TSVariable')
+  --     highlight('@variable.builtin', 'TSVariableBuiltin')
+  --     highlight('@constant', 'TSConstant')
+  --     highlight('@constant.builtin', 'TSConstant')
+  --     highlight('@constant.macro', 'TSConstant')
+  --     highlight('@namespace', 'TSNamespace')
+  --     highlight('@symbol', 'TSSymbol')
+  --     highlight('@text', 'TSText')
+  --     highlight('@text.strong', 'TSStrong')
+  --     highlight('@text.emphasis', 'TSEmphasis')
+  --     highlight('@text.underline', 'TSUnderline')
+  --     highlight('@text.strike', 'TSStrike')
+  --     highlight('@text.title', 'TSTitle')
+  --     highlight('@text.literal', 'TSLiteral')
+  --     highlight('@text.uri', 'TSUri')
+  --     highlight('@text.math', 'Number')
+  --     highlight('@text.environment', 'Macro')
+  --     highlight('@text.environment.name', 'Type')
+  --     highlight('@text.reference', 'TSParameterReference')
+  --     highlight('@text.todo', 'Todo')
+  --     highlight('@text.note', 'Tag')
+  --     highlight('@text.warning', 'DiagnosticWarn')
+  --     highlight('@text.danger', 'DiagnosticError')
+  --     highlight('@tag', 'TSTag')
+  --     highlight('@tag.attribute', 'TSAttribute')
+  --     highlight('@tag.delimiter', 'TSTagDelimiter')
+  -- end
+  --
+  -- if self.config.ts_rainbow then
+  --   highlight("rainbowcol1", { guifg = self.colors.color6 })
+  --   highlight("rainbowcol2", { guifg = self.colors.color9 })
+  --   highlight("rainbowcol3", { guifg = self.colors.color10 })
+  --   highlight("rainbowcol4", { guifg = self.colors.color7 })
+  --   highlight("rainbowcol5", { guifg = self.colors.color12 })
+  --   highlight("rainbowcol6", { guifg = self.colors.color13 })
+  --   highlight("rainbowcol7", { guifg = self.colors.color14 })
+  -- end
+  --
+  -- highlight("NvimInternalError", { guifg = self.colors.color0, guibg = self.colors.color8, gui = 'none', guisp = nil })
+
+  -- highlight("NormalFloat", { guifg = self.colors.color5, guibg = self.colors.color0, gui = nil, guisp = nil })
+  -- highlight("FloatBorder", { guifg = self.colors.color5, guibg = self.colors.color0, gui = nil, guisp = nil })
+  -- highlight("NormalNC", { guifg = self.colors.color5, guibg = self.colors.color0, gui = nil, guisp = nil })
+  -- highlight("TermCursor", { guifg = self.colors.color0, guibg = self.colors.color5, gui = 'none', guisp = nil })
+  -- highlight("TermCursorNC", { guifg = self.colors.color0, guibg = self.colors.color5, gui = nil, guisp = nil })
+
+  -- highlight("User1", { guifg = self.colors.color8, guibg = self.colors.color2, gui = 'none', guisp = nil })
+  -- highlight("User2", { guifg = self.colors.color14, guibg = self.colors.color2, gui = 'none', guisp = nil })
+  -- highlight("User3", { guifg = self.colors.color5, guibg = self.colors.color2, gui = 'none', guisp = nil })
+  -- highlight("User4", { guifg = self.colors.color12, guibg = self.colors.color2, gui = 'none', guisp = nil })
+  -- highlight("User5", { guifg = self.colors.color5, guibg = self.colors.color2, gui = 'none', guisp = nil })
+  -- highlight("User6", { guifg = self.colors.color5, guibg = self.colors.color1, gui = 'none', guisp = nil })
+  -- highlight("User7", { guifg = self.colors.color5, guibg = self.colors.color2, gui = 'none', guisp = nil })
+  -- highlight("User8", { guifg = self.colors.color0, guibg = self.colors.color2, gui = 'none', guisp = nil })
+  -- highlight("User9", { guifg = self.colors.color0, guibg = self.colors.color2, gui = 'none', guisp = nil })
+  --
+  -- highlight("TreesitterContext", { guifg = nil, guibg = self.colors.color1, gui = 'italic', guisp = nil })
+
+  -- if self.config.telescope then
+    -- highlight("TelescopeBorder", { guifg = self.colors.background, guibg = self.colors.background, gui = nil, guisp = nil })
+    -- highlight("TelescopePromptBorder", { guifg = self.colors.color0, guibg = self.colors.color0, gui = nil, guisp = nil })
+    -- highlight("TelescopePromptNormal", { guifg = self.colors.color5, guibg = self.colors.color0, gui = nil, guisp = nil })
+    -- highlight("TelescopePromptPrefix", { guifg = self.colors.color8, guibg = self.colors.color0, gui = nil, guisp = nil })
+    -- highlight("TelescopeNormal", { guifg = nil, guibg = self.colors.background, gui = nil, guisp = nil })
+    -- highlight("TelescopePreviewTitle", { guifg = self.colors.color2, guibg = self.colors.color11, gui = nil, guisp = nil })
+    -- highlight("TelescopePromptTitle", { guifg = self.colors.color2, guibg = self.colors.color08, gui = nil, guisp = nil })
+    -- highlight("TelescopeResultsTitle", { guifg = self.colors.background, guibg = self.colors.background, gui = nil, guisp = nil })
+    -- highlight("TelescopeSelection", { guifg = nil, guibg = self.colors.color0, gui = nil, guisp = nil })
+    -- highlight("TelescopePreviewLine", { guifg = nil, guibg = self.colors.color1, gui = 'none', guisp = nil })
+  -- end
+
+  -- if self.config.notify then
+  --   highlight("NotifyERRORBorder", { guifg = self.colors.color8, guibg = nil, gui = 'none', guisp = nil })
+  --   highlight("NotifyWARNBorder", { guifg = self.colors.color14, guibg = nil, gui = 'none', guisp = nil })
+  --   highlight("NotifyINFOBorder", { guifg = self.colors.color5, guibg = nil, gui = 'none', guisp = nil })
+  --   highlight("NotifyDEBUGBorder", { guifg = self.colors.color12, guibg = nil, gui = 'none', guisp = nil })
+  --   highlight("NotifyTRACEBorder", { guifg = self.colors.color12, guibg = nil, gui = 'none', guisp = nil })
+  --   highlight("NotifyERRORIcon", { guifg = self.colors.color8, guibg = nil, gui = 'none', guisp = nil })
+  --   highlight("NotifyWARNIcon", { guifg = self.colors.color14, guibg = nil, gui = 'none', guisp = nil })
+  --   highlight("NotifyINFOIcon", { guifg = self.colors.color5, guibg = nil, gui = 'none', guisp = nil })
+  --   highlight("NotifyDEBUGIcon", { guifg = self.colors.color12, guibg = nil, gui = 'none', guisp = nil })
+  --   highlight("NotifyTRACEIcon", { guifg = self.colors.color12, guibg = nil, gui = 'none', guisp = nil })
+  --   highlight("NotifyERRORTitle", { guifg = self.colors.color8, guibg = nil, gui = 'none', guisp = nil })
+  --   highlight("NotifyWARNTitle", { guifg = self.colors.color14, guibg = nil, gui = 'none', guisp = nil })
+  --   highlight("NotifyINFOTitle", { guifg = self.colors.color5, guibg = nil, gui = 'none', guisp = nil })
+  --   highlight("NotifyDEBUGTitle", { guifg = self.colors.color12, guibg = nil, gui = 'none', guisp = nil })
+  --   highlight("NotifyTRACETitle", { guifg = self.colors.color12, guibg = nil, gui = 'none', guisp = nil })
+  --   highlight("NotifyERRORBody", 'Normal')
+  --   highlight("NotifyWARNBody", 'Normal')
+  --   highlight("NotifyINFOBody", 'Normal')
+  --   highlight("NotifyDEBUGBody", 'Normal')
+  --   highlight("NotifyTRACEBody", 'Normal')
+  -- end
+  --
+  -- if self.config.indentblankline then
+  --   highlight("IndentBlanklineChar", { guifg = self.colors.color2, gui = 'nocombine' })
+  --   highlight("IndentBlanklineContextChar", { guifg = self.colors.color4, gui = 'nocombine' })
+  -- end
+  --
+  -- if self.config.cmp then
+  --   highlight("CmpDocumentationBorder", { guifg = self.colors.color5, guibg = self.colors.color0, gui = nil, guisp = nil })
+  --   highlight("CmpDocumentation", { guifg = self.colors.color5, guibg = self.colors.color0, gui = nil, guisp = nil })
+  --   highlight("CmpItemAbbr", { guifg = self.colors.color5, guibg = self.colors.color1, gui = nil, guisp = nil })
+  --   highlight("CmpItemAbbrDeprecated", { guifg = self.colors.color3, guibg = nil, gui = 'strikethrough', guisp = nil })
+  --   highlight("CmpItemAbbrMatch", { guifg = self.colors.color13, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemAbbrMatchFuzzy", { guifg = self.colors.color13, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindDefault", { guifg = self.colors.color5, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemMenu", { guifg = self.colors.color4, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindKeyword", { guifg = self.colors.color14, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindVariable", { guifg = self.colors.color8, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindConstant", { guifg = self.colors.color9, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindReference", { guifg = self.colors.color8, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindValue", { guifg = self.colors.color9, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindFunction", { guifg = self.colors.color13, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindMethod", { guifg = self.colors.color13, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindConstructor", { guifg = self.colors.color13, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindClass", { guifg = self.colors.color10, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindInterface", { guifg = self.colors.color10, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindStruct", { guifg = self.colors.color10, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindEvent", { guifg = self.colors.color10, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindEnum", { guifg = self.colors.color10, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindUnit", { guifg = self.colors.color10, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindModule", { guifg = self.colors.color5, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindProperty", { guifg = self.colors.color8, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindField", { guifg = self.colors.color8, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindTypeParameter", { guifg = self.colors.color10, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindEnumMember", { guifg = self.colors.color10, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindOperator", { guifg = self.colors.color5, guibg = nil, gui = nil, guisp = nil })
+  --   highlight("CmpItemKindSnippet", { guifg = self.colors.color4, guibg = nil, gui = nil, guisp = nil })
+  -- end
+  --
+  -- if self.config.illuminate then
+  --   highlight("IlluminatedWordText", { guifg = nil, guibg = nil, gui = 'underline', guisp = self.colors.color4 })
+  --   highlight("IlluminatedWordRead", { guifg = nil, guibg = nil, gui = 'underline', guisp = self.colors.color4 })
+  --   highlight("IlluminatedWordWrite", { guifg = nil, guibg = nil, gui = 'underline', guisp = self.colors.color4 })
+  -- end
+  --
+  -- if self.config.lsp_semantic then
+  --     highlight('@class', 'TSType')
+  --     highlight('@struct', 'TSType')
+  --     highlight('@enum', 'TSType')
+  --     highlight('@enumMember', 'Constant')
+  --     highlight('@event', 'Identifier')
+  --     highlight('@interface', 'Structure')
+  --     highlight('@modifier', 'Identifier')
+  --     highlight('@regexp', 'TSStringRegex')
+  --     highlight('@typeParameter', 'Type')
+  --     highlight('@decorator', 'Identifier')
+  -- end
+--
+--   vim.g.terminal_color_fg  = self.colors.foreground
+--   vim.g.terminal_color_bg  = self.colors.background
+--   vim.g.terminal_color_0  = self.colors.color0
+--   vim.g.terminal_color_1  = self.colors.color1
+--   vim.g.terminal_color_2  = self.colors.color2
+--   vim.g.terminal_color_3  = self.colors.color3
+--   vim.g.terminal_color_4  = self.colors.color4
+--   vim.g.terminal_color_5  = self.colors.color5
+--   vim.g.terminal_color_6  = self.colors.color6
+--   vim.g.terminal_color_7  = self.colors.color7
+--   vim.g.terminal_color_8  = self.colors.color8
+--   vim.g.terminal_color_9  = self.colors.color9
+--   vim.g.terminal_color_10 = self.colors.color10
+--   vim.g.terminal_color_11 = self.colors.color11
+--   vim.g.terminal_color_12 = self.colors.color12
+--   vim.g.terminal_color_13 = self.colors.color13
+--   vim.g.terminal_color_14 = self.colors.color14
+--   vim.g.terminal_color_15 = self.colors.color15
+-- end

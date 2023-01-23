@@ -1,0 +1,37 @@
+!Theme Tokyo night
+*foreground: #a9b1d6
+*background: #1a1b26
+*cursorColor: #a9b1d6
+*borderColor: #1a1b26
+
+! black
+xterm*color0:     #1e1f2a
+xterm*color8:     #4e5173
+
+! red
+xterm*color1:     #F7768E
+xterm*color9:     #F7768E
+
+! green
+xterm*color2:     #9ECE6A
+xterm*color10:    #9ECE6A
+
+! yellow
+xterm*color3:     #E0AF68
+xterm*color11:    #E0AF68
+
+! blue
+xterm*color4:     #7AA2F7
+xterm*color12:    #7AA2F7
+
+! magenta
+xterm*color5:     #9a7ecc
+xterm*color13:    #9a7ecc
+
+! cyan
+xterm*color6:     #4abaaf
+xterm*color14:    #4abaaf
+
+! white
+xterm*color7:     #acb0d0
+xterm*color15:    #acb0d0

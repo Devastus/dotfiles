@@ -60,8 +60,9 @@ packer.startup(function(use)
   use { "https://github.com/echasnovski/mini.nvim", tag = "v0.6.0" }
   use { "mfussenegger/nvim-dap", tag = "0.3.0" }
   use { "sheerun/vim-polyglot", tag = "v4.17.1" }
-  use { "folke/tokyonight.nvim", commit = "29e2c689c10679f723ae1deadf7f0067d394a545" }
   use { "kyazdani42/nvim-web-devicons", commit = "520776f30a3b39ed56402bffbdae57549e778b40" }
+  -- use { "folke/tokyonight.nvim", commit = "29e2c689c10679f723ae1deadf7f0067d394a545" }
+  -- use { "RRethy/nvim-base16", commit = "cf8252058c8fc486bc565a815083a2eb390f7621" }
 
   -- use { "kylechui/nvim-surround", tag = "v1.0.0" }
   -- use { "godlygeek/tabular" }
@@ -206,9 +207,45 @@ end)
 
 -- require("mason").setup()
 
-local lsp = require('lsp-zero')
+local lsp = require("lsp-zero")
 
-lsp.preset('recommended')
+lsp.preset("recommended")
+
+lsp.configure("sumneko_lua", {
+  settings = {
+    Lua = {
+      runtime = {
+        version = 'Lua 5.4',
+        path = {
+          "?.lua",
+          "?/init.lua",
+          vim.fn.expand("./lua_modules/share/lua/5.4/?.lua"),
+          vim.fn.expand("./lua_modules/share/lua/5.4/?/init.lua"),
+          vim.fn.expand("~/.luarocks/share/lua/5.4/?.lua"),
+          vim.fn.expand("~/.luarocks/share/lua/5.4/?/init.lua"),
+          "/usr/share/5.4/?.lua",
+          "/usr/share/lua/5.4/?/init.lua",
+        }
+      },
+      diagnostics = {
+          -- Get the language server to recognize the `vim` global
+          globals = { "vim" },
+      },
+      workspace = {
+        library = {
+          vim.fn.expand('~/.luarocks/share/lua/5.4'),
+          '/usr/share/lua/5.4',
+          vim.fn.expand("./lua_modules/share/lua/5.4/?.lua"),
+          vim.fn.expand("./lua_modules/share/lua/5.4/?/init.lua"),
+        }
+      },
+
+      telemetry = {
+        enable = false,
+      },
+    }
+  }
+})
 
 lsp.set_preferences({
   set_lsp_keymaps = false
